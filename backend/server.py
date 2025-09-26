@@ -88,6 +88,29 @@ class ProductCreate(BaseModel):
     inventory_count: int = 0
     sku: Optional[str] = None
 
+class Promotion(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    code: str
+    discount_percentage: Optional[float] = None
+    discount_amount: Optional[float] = None
+    applicable_products: List[str] = []  # Product IDs
+    min_order_amount: Optional[float] = None
+    start_date: datetime
+    end_date: datetime
+    is_active: bool = True
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class PromotionCreate(BaseModel):
+    name: str
+    code: str
+    discount_percentage: Optional[float] = None
+    discount_amount: Optional[float] = None
+    applicable_products: List[str] = []
+    min_order_amount: Optional[float] = None
+    start_date: str
+    end_date: str
+
 class Order(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
