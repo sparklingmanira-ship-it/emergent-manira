@@ -333,20 +333,51 @@ const AdminDashboard = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Choose Product Image
                   </label>
-                  <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto">
-                    {availableImages.map((img, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => setNewProduct({...newProduct, image_url: img})}
-                        className={`border-2 rounded-lg p-1 ${
-                          newProduct.image_url === img ? 'border-blue-500' : 'border-gray-200'
-                        }`}
-                      >
-                        <img src={img} alt="Sample" className="w-full h-16 object-cover rounded" />
-                      </button>
-                    ))}
+                  <div className="mb-3">
+                    <input
+                      type="url"
+                      placeholder="Or paste image URL here..."
+                      value={newProduct.image_url}
+                      onChange={(e) => setNewProduct({...newProduct, image_url: e.target.value})}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
                   </div>
+                  
+                  <div className="border rounded-lg p-3">
+                    <p className="text-sm text-gray-600 mb-2">Select from Manira Images:</p>
+                    <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto">
+                      {availableImages.map((img, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => setNewProduct({...newProduct, image_url: img})}
+                          className={`border-2 rounded-lg p-1 hover:border-blue-300 transition-colors ${
+                            newProduct.image_url === img ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                          }`}
+                        >
+                          <img 
+                            src={img} 
+                            alt={`Product ${index + 1}`} 
+                            className="w-full h-16 object-cover rounded"
+                          />
+                          <div className="text-xs text-center mt-1 text-gray-600">
+                            {index < 5 ? 'Manira' : 'Sample'} {index + 1}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {newProduct.image_url && (
+                    <div className="mt-3">
+                      <p className="text-sm text-gray-600 mb-2">Preview:</p>
+                      <img 
+                        src={newProduct.image_url} 
+                        alt="Product Preview" 
+                        className="w-32 h-32 object-cover rounded-lg border border-gray-300"
+                      />
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex space-x-4 pt-4">
