@@ -80,6 +80,7 @@ class ProductCreate(BaseModel):
     weight: Optional[str] = None
     image_url: str
     inventory_count: int = 0
+    sku: Optional[str] = None
 
 class Order(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
