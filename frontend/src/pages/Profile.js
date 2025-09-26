@@ -9,10 +9,55 @@ const API = `${BACKEND_URL}/api`;
 
 const Profile = () => {
   const { user } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: user?.full_name || '',
+    phone: user?.phone || '',
+    address: user?.address || ''
+  });
 
   if (!user) {
     return <div>Loading...</div>;
   }
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.put(`${API}/profile`, formData);
+      toast.success('Profile updated successfully!');
+      
+      // Update user data in context (you might need to refresh or update context)
+      setIsEditing(false);
+      
+      // Reload page to reflect changes
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      full_name: user.full_name || '',
+      phone: user.phone || '',
+      address: user.address || ''
+    });
+    setIsEditing(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
