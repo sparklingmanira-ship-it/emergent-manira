@@ -178,15 +178,27 @@ const Payment = () => {
                   <span className="font-medium">{order.items.length} products</span>
                 </div>
                 
-                {order.original_amount && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Original Amount</span>
-                    <span className="text-gray-500 line-through">₹{order.original_amount.toLocaleString()}</span>
-                  </div>
+                {order.original_amount && order.discount_amount > 0 && (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Original Amount</span>
+                      <span className="text-gray-500 line-through">₹{order.original_amount.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Promotion ({order.promotion_code})</span>
+                      <span className="text-green-600">-₹{order.discount_amount.toLocaleString()}</span>
+                    </div>
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3 my-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-green-800 font-medium">💰 You Saved</span>
+                        <span className="text-green-600 font-bold">₹{order.discount_amount.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </>
                 )}
                 
                 <div className="flex justify-between text-lg font-bold border-t pt-3">
-                  <span>Total Amount</span>
+                  <span>Amount to Pay</span>
                   <span className="text-blue-600">₹{order.total_amount.toLocaleString()}</span>
                 </div>
               </div>
