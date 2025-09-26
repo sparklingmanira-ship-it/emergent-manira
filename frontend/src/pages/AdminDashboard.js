@@ -49,6 +49,8 @@ const AdminDashboard = () => {
   });
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [partialNotes, setPartialNotes] = useState('');
+  const [orderStatusFilter, setOrderStatusFilter] = useState('all');
+  const [orderDateFilter, setOrderDateFilter] = useState('all');
   
   const [newProduct, setNewProduct] = useState({
     name: '',
