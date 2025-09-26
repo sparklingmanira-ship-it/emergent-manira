@@ -254,6 +254,49 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleAddPromotion = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const promotionData = {
+        ...newPromotion,
+        discount_percentage: newPromotion.discount_percentage ? parseFloat(newPromotion.discount_percentage) : null,
+        discount_amount: newPromotion.discount_amount ? parseFloat(newPromotion.discount_amount) : null,
+        min_order_amount: newPromotion.min_order_amount ? parseFloat(newPromotion.min_order_amount) : null
+      };
+      
+      await axios.post(`${API}/admin/promotions`, promotionData);
+      toast.success('Promotion created successfully!');
+      setShowAddPromotion(false);
+      setNewPromotion({
+        name: '', discount_percentage: '', discount_amount: '', applicable_products: [],
+        start_date: '', end_date: '', min_order_amount: '', code: ''
+      });
+      fetchPromotions();
+    } catch (error) {
+      console.error('Error creating promotion:', error);
+      toast.error('Failed to create promotion');
+    }
+  };
+
+  const deletePromotion = async (promotionId) => {
+    if (window.confirm('Are you sure you want to delete this promotion?')) {
+      try {
+        await axios.delete(`${API}/admin/promotions/${promotionId}`);
+        toast.success('Promotion deleted successfully!');
+        fetchPromotions();
+      } catch (error) {
+        console.error('Error deleting promotion:', error);
+        toast.error('Failed to delete promotion');
+      }
+    }
+  };
+
+  const editPromotion = (promotion) => {
+    // Implementation for editing promotions
+    toast.info('Edit promotion feature coming soon!');
+  };
+
   const availableImages = [
     // Your Manira Product Images
     'https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/tp5jz4ds_IMG_6633.jpeg',
