@@ -23,6 +23,42 @@ const Cart = () => {
     );
   }
 
+  const applyPromoCode = async () => {
+    if (!promoCode.trim()) {
+      toast.error('Please enter a promotion code');
+      return;
+    }
+
+    setPromoLoading(true);
+    try {
+      const response = await axios.post(`${API}/apply-promotion`, {
+        code: promoCode,
+        order_amount: getCartTotal()
+      });
+
+      setAppliedPromo(response.data);
+      toast.success(`Promotion applied! You save ₹${response.data.discount}`);
+    } catch (error) {
+      console.error('Error applying promotion:', error);
+      toast.error(error.response?.data?.detail || 'Invalid promotion code');
+    } finally {
+      setPromoLoading(false);
+    }
+  };
+
+  const removePromoCode = () => {
+    setAppliedPromo(null);
+    setPromoCode('');
+    toast.success('Promotion code removed');
+  };
+
+  const getFinalTotal = () => {
+    const cartTotal = getCartTotal();
+    const shipping = cartTotal > 2000 ? 0 : 100;
+    const discount = appliedPromo ? appliedPromo.discount : 0;
+    return Math.max(0, cartTotal + shipping - discount);
+  };
+
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
