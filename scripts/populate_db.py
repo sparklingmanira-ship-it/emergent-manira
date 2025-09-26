@@ -23,7 +23,9 @@ db = client[os.environ['DB_NAME']]
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    # Simple hash for demo purposes - truncate password if needed
+    password_bytes = password.encode('utf-8')[:72]  # bcrypt limitation
+    return pwd_context.hash(password_bytes)
 
 async def create_admin_user():
     """Create an admin user"""
