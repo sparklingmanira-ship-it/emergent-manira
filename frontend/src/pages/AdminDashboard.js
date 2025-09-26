@@ -324,7 +324,43 @@ const AdminDashboard = () => {
               </table>
             </div>
           </div>
-        ) : (
+        ) : activeTab === 'categories' ? (
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Product Categories</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {categories.map((category, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium text-gray-900 capitalize">
+                      {category}
+                    </h3>
+                    <button
+                      onClick={() => {
+                        if (window.confirm(`Are you sure you want to delete the "${category}" category?`)) {
+                          // Add delete category functionality here
+                          console.log('Delete category:', category);
+                        }
+                      }}
+                      className="text-red-600 hover:text-red-900"
+                      title="Delete Category"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">
+                    {products.filter(p => p.category === category).length} products
+                  </p>
+                </div>
+              ))}
+            </div>
+            
+            {categories.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-500">No categories found. Add your first category!</p>
+              </div>
+            )}
+          </div>
+        ) : activeTab === 'orders' ? (
           <div className="space-y-6">
             {orders.map((order) => (
               <div key={order.id} className="bg-white rounded-2xl shadow-lg p-6">
@@ -361,7 +397,97 @@ const AdminDashboard = () => {
               </div>
             ))}
           </div>
-        )}
+        ) : activeTab === 'settings' ? (
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Settings</h2>
+            
+            <div className="space-y-6">
+              <div className="border-b border-gray-200 pb-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Store Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Store Name</label>
+                    <input
+                      type="text"
+                      defaultValue="Manira Jewellery"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Contact Email</label>
+                    <input
+                      type="email"
+                      defaultValue="contact@manira.com"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                    <input
+                      type="tel"
+                      defaultValue="+91 98765 43210"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="INR">Indian Rupee (₹)</option>
+                      <option value="USD">US Dollar ($)</option>
+                      <option value="EUR">Euro (€)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="border-b border-gray-200 pb-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Shipping Settings</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Free Shipping Threshold</label>
+                    <input
+                      type="number"
+                      defaultValue="2000"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Standard Shipping Cost</label>
+                    <input
+                      type="number"
+                      defaultValue="100"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Notifications</h3>
+                <div className="space-y-3">
+                  <label className="flex items-center">
+                    <input type="checkbox" defaultChecked className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                    <span className="ml-2 text-sm text-gray-700">Email notifications for new orders</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" defaultChecked className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                    <span className="ml-2 text-sm text-gray-700">Low stock alerts</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                    <span className="ml-2 text-sm text-gray-700">Marketing emails</span>
+                  </label>
+                </div>
+              </div>
+              
+              <div className="pt-6">
+                <button className="manira-btn-primary">
+                  Save Settings
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         {/* Add Product Modal */}
         {showAddProduct && (
