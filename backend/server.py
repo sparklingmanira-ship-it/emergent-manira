@@ -624,8 +624,17 @@ async def get_customers(admin_user: User = Depends(get_admin_user)):
     customer_list = []
     for customer in customers:
         order_count = await db.orders.count_documents({"user_id": customer["id"]})
-        customer["order_count"] = order_count
-        customer_list.append(customer)
+        customer_dict = {
+            "id": customer.get("id"),
+            "full_name": customer.get("full_name", ""),
+            "email": customer.get("email", ""),
+            "phone": customer.get("phone", ""),
+            "address": customer.get("address", ""),
+            "is_admin": customer.get("is_admin", False),
+            "created_at": customer.get("created_at"),
+            "order_count": order_count
+        }
+        customer_list.append(customer_dict)
     
     return customer_list
 
