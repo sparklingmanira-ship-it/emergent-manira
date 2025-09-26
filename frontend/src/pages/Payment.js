@@ -62,23 +62,58 @@ const Payment = () => {
     setPaymentProcessing(true);
     
     try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Create Razorpay order
+      const orderResponse = await axios.post(`${API}/payment/create-order/${orderId}`);
+      const { razorpay_order_id, amount, currency, key_id } = orderResponse.data;
       
-      // Update order payment status
-      await axios.put(`${API}/admin/orders/${orderId}/payment`, {
-        payment_status: 'completed',
-        payment_method: 'UPI'
-      });
+      // Initialize Razorpay
+      const options = {
+        key: key_id,
+        amount: amount,
+        currency: currency,
+        name: 'Manira Jewellery',
+        description: `Payment for Order #${orderId.slice(-8).toUpperCase()}`,
+        order_id: razorpay_order_id,
+        handler: async function (response) {
+          try {
+            // Verify payment
+            await axios.post(`${API}/payment/verify/${orderId}`, {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature
+            });
+            
+            toast.success('Payment completed successfully!');
+            setShowUpiModal(false);
+            navigate('/orders');
+            
+          } catch (error) {
+            console.error('Payment verification error:', error);
+            toast.error('Payment verification failed');
+          }
+        },
+        prefill: {
+          name: user.full_name,
+          email: user.email,
+          contact: user.phone
+        },
+        theme: {
+          color: '#1e40af'
+        },
+        modal: {
+          ondismiss: function() {
+            setPaymentProcessing(false);
+            setShowUpiModal(false);
+          }
+        }
+      };
 
-      toast.success('Payment completed successfully!');
-      setShowUpiModal(false);
-      navigate('/orders');
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
       
     } catch (error) {
       console.error('Payment error:', error);
-      toast.error('Payment failed. Please try again.');
-    } finally {
+      toast.error('Payment initiation failed. Please try again.');
       setPaymentProcessing(false);
     }
   };
