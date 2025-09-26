@@ -157,6 +157,60 @@ const AdminDashboard = () => {
     }
   };
 
+  const getOrderStatusColor = (status) => {
+    switch (status) {
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'accepted': return 'bg-green-100 text-green-800';
+      case 'partially_accepted': return 'bg-blue-100 text-blue-800';
+      case 'rejected': return 'bg-red-100 text-red-800';
+      case 'cancelled': return 'bg-gray-100 text-gray-800';
+      case 'shipped': return 'bg-purple-100 text-purple-800';
+      case 'delivered': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleOrderAction = async (orderId, action) => {
+    const confirmMessage = action === 'accept' ? 'Accept this order?' : 
+                          action === 'reject' ? 'Reject this order?' : 'Process this order?';
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        await axios.put(`${API}/admin/orders/${orderId}/review`, {
+          action: action,
+          admin_notes: action === 'reject' ? 'Order rejected by admin' : 'Order accepted'
+        });
+        toast.success(`Order ${action}ed successfully!`);
+        fetchOrders();
+      } catch (error) {
+        console.error('Error processing order:', error);
+        toast.error('Failed to process order');
+      }
+    }
+  };
+
+  const openPartialOrderModal = (order) => {
+    setSelectedOrder(order);
+    setShowPartialModal(true);
+  };
+
+  const handlePartialAccept = async (itemsStatus, notes) => {
+    try {
+      await axios.put(`${API}/admin/orders/${selectedOrder.id}/review`, {
+        action: 'partial',
+        items_status: itemsStatus,
+        admin_notes: notes
+      });
+      toast.success('Order partially accepted!');
+      setShowPartialModal(false);
+      setSelectedOrder(null);
+      fetchOrders();
+    } catch (error) {
+      console.error('Error processing partial order:', error);
+      toast.error('Failed to process partial order');
+    }
+  };
+
   const availableImages = [
     // Your Manira Product Images
     'https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/tp5jz4ds_IMG_6633.jpeg',
