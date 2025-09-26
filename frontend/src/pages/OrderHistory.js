@@ -79,10 +79,15 @@ const OrderHistory = () => {
                     
                     <div className="mt-4 sm:mt-0 flex items-center space-x-4">
                       <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
-                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                        {order.status.replace('_', ' ').charAt(0).toUpperCase() + order.status.replace('_', ' ').slice(1)}
                       </span>
                       <span className="text-lg font-bold text-blue-600">
                         ₹{order.total_amount.toLocaleString()}
+                        {order.original_amount && (
+                          <span className="text-sm text-gray-500 line-through ml-2">
+                            ₹{order.original_amount.toLocaleString()}
+                          </span>
+                        )}
                       </span>
                     </div>
                   </div>
