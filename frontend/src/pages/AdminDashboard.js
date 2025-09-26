@@ -298,6 +298,87 @@ const AdminDashboard = () => {
     toast.info('Edit promotion feature coming soon!');
   };
 
+  // Excel Export Functions
+  const exportCustomersToExcel = () => {
+    try {
+      const customersData = customers.map(customer => ({
+        'Customer Name': customer.full_name,
+        'Email': customer.email,
+        'Phone': customer.phone,
+        'Address': customer.address || 'Not provided',
+        'Registration Date': new Date(customer.created_at).toLocaleDateString(),
+        'Total Orders': customer.order_count || 0,
+        'Account Type': customer.is_admin ? 'Admin' : 'Customer'
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(customersData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Customers');
+      
+      // Auto-size columns
+      const colWidths = [
+        { wch: 20 }, // Customer Name
+        { wch: 25 }, // Email
+        { wch: 15 }, // Phone
+        { wch: 30 }, // Address
+        { wch: 15 }, // Registration Date
+        { wch: 12 }, // Total Orders
+        { wch: 12 }  // Account Type
+      ];
+      worksheet['!cols'] = colWidths;
+
+      XLSX.writeFile(workbook, `Manira_Customers_${new Date().toISOString().split('T')[0]}.xlsx`);
+      toast.success('Customer data exported successfully!');
+    } catch (error) {
+      console.error('Export error:', error);
+      toast.error('Failed to export customer data');
+    }
+  };
+
+  const exportOrdersToExcel = () => {
+    try {
+      const ordersData = orders.map(order => ({
+        'Order ID': `#${order.id.slice(-8).toUpperCase()}`,
+        'Order Date': new Date(order.created_at).toLocaleDateString(),
+        'Total Items': order.items.length,
+        'Order Amount': `₹${order.total_amount.toLocaleString()}`,
+        'Original Amount': order.original_amount ? `₹${order.original_amount.toLocaleString()}` : '-',
+        'Status': order.status.replace('_', ' ').toUpperCase(),
+        'Payment Status': order.payment_status.toUpperCase(),
+        'Payment Method': order.payment_method,
+        'Customer Phone': order.phone,
+        'Shipping Address': order.shipping_address,
+        'Admin Notes': order.admin_notes || 'None'
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(ordersData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
+      
+      // Auto-size columns
+      const colWidths = [
+        { wch: 12 }, // Order ID
+        { wch: 12 }, // Order Date
+        { wch: 10 }, // Total Items
+        { wch: 15 }, // Order Amount
+        { wch: 15 }, // Original Amount
+        { wch: 18 }, // Status
+        { wch: 15 }, // Payment Status
+        { wch: 15 }, // Payment Method
+        { wch: 15 }, // Customer Phone
+        { wch: 35 }, // Shipping Address
+        { wch: 25 }  // Admin Notes
+      ];
+      worksheet['!cols'] = colWidths;
+
+      XLSX.writeFile(workbook, `Manira_Orders_${new Date().toISOString().split('T')[0]}.xlsx`);
+      toast.success('Orders data exported successfully!');
+    } catch (error) {
+      console.error('Export error:', error);
+      toast.error('Failed to export orders data');
+    }
+  };
+
   const availableImages = [
     // Your Manira Product Images
     'https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/tp5jz4ds_IMG_6633.jpeg',
