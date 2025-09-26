@@ -98,14 +98,25 @@ const OrderHistory = () => {
                       <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
                         {order.status.replace('_', ' ').charAt(0).toUpperCase() + order.status.replace('_', ' ').slice(1)}
                       </span>
-                      <span className="text-lg font-bold text-blue-600">
-                        ₹{order.total_amount.toLocaleString()}
-                        {order.original_amount && (
-                          <span className="text-sm text-gray-500 line-through ml-2">
-                            ₹{order.original_amount.toLocaleString()}
+                      <div className="text-right">
+                        {order.original_amount && order.discount_amount > 0 ? (
+                          <div className="space-y-1">
+                            <div className="text-sm text-gray-500">
+                              Original: <span className="line-through">₹{order.original_amount.toLocaleString()}</span>
+                            </div>
+                            <div className="text-sm text-green-600">
+                              Saved: ₹{order.discount_amount.toLocaleString()} ({order.promotion_code})
+                            </div>
+                            <div className="text-lg font-bold text-blue-600">
+                              Paid: ₹{order.total_amount.toLocaleString()}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-lg font-bold text-blue-600">
+                            ₹{order.total_amount.toLocaleString()}
                           </span>
                         )}
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </div>
