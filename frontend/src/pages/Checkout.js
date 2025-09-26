@@ -192,6 +192,17 @@ const Checkout = () => {
                   <span>Subtotal</span>
                   <span>₹{total.toLocaleString()}</span>
                 </div>
+                
+                {appliedPromo && (
+                  <div className="flex justify-between text-green-600">
+                    <span className="flex items-center">
+                      <Tag className="h-4 w-4 mr-1" />
+                      Discount ({appliedPromo.promotion.code})
+                    </span>
+                    <span>-₹{discount.toLocaleString()}</span>
+                  </div>
+                )}
+                
                 <div className="flex justify-between">
                   <span>Shipping</span>
                   <span className={shipping === 0 ? 'text-green-600' : ''}>
