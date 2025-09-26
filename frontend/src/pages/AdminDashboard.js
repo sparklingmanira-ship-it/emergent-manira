@@ -421,8 +421,11 @@ const AdminDashboard = () => {
         { wch: 12 }, // Order ID
         { wch: 12 }, // Order Date
         { wch: 10 }, // Total Items
-        { wch: 15 }, // Order Amount
         { wch: 15 }, // Original Amount
+        { wch: 12 }, // Promotion Code
+        { wch: 15 }, // Discount Amount
+        { wch: 15 }, // Final Amount
+        { wch: 12 }, // Savings
         { wch: 18 }, // Status
         { wch: 15 }, // Payment Status
         { wch: 15 }, // Payment Method
