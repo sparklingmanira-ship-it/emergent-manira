@@ -541,12 +541,11 @@ const AdminDashboard = () => {
                     onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="necklaces">Necklaces</option>
-                    <option value="rings">Rings</option>
-                    <option value="earrings">Earrings</option>
-                    <option value="bracelets">Bracelets</option>
-                    <option value="pendants">Pendants</option>
-                    <option value="bangles">Bangles</option>
+                    {categories.map((category) => (
+                      <option key={category} value={category}>
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 
