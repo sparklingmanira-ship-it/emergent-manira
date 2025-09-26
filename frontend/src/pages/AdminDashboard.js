@@ -750,6 +750,16 @@ const AdminDashboard = () => {
           </div>
         ) : activeTab === 'orders' ? (
           <div className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-lg p-4 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-900">Order Management</h2>
+              <button
+                onClick={exportOrdersToExcel}
+                className="manira-btn-secondary flex items-center text-sm px-4 py-2"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export Orders to Excel
+              </button>
+            </div>
             {orders.map((order) => (
               <div key={order.id} className="bg-white rounded-2xl shadow-lg p-6">
                 <div className="flex justify-between items-start mb-4">
