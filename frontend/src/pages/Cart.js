@@ -11,6 +11,9 @@ const API = `${BACKEND_URL}/api`;
 const Cart = () => {
   const { cartItems, loading, updateQuantity, removeFromCart, getCartTotal } = useCart();
   const navigate = useNavigate();
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [promoLoading, setPromoLoading] = useState(false);
 
   if (loading) {
     return (
