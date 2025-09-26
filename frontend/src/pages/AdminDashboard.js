@@ -376,24 +376,96 @@ const AdminDashboard = () => {
                   <div className="text-right">
                     <p className="text-2xl font-bold text-blue-600">
                       ₹{order.total_amount.toLocaleString()}
+                      {order.original_amount && (
+                        <span className="text-sm text-gray-500 line-through ml-2">
+                          ₹{order.original_amount.toLocaleString()}
+                        </span>
+                      )}
                     </p>
-                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                      {order.status}
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getOrderStatusColor(order.status)}`}>
+                      {order.status.replace('_', ' ').toUpperCase()}
                     </span>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-4">
                   <div>
                     <strong>Items:</strong> {order.items.length} products
                   </div>
                   <div>
-                    <strong>Payment:</strong> {order.payment_method}
+                    <strong>Payment:</strong> {order.payment_method} ({order.payment_status})
                   </div>
                   <div className="md:col-span-2">
                     <strong>Address:</strong> {order.shipping_address}
                   </div>
+                  <div className="md:col-span-2">
+                    <strong>Phone:</strong> {order.phone}
+                  </div>
                 </div>
+
+                {/* Order Items Details */}
+                <div className="border-t border-gray-200 pt-4 mb-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Order Items:</h4>
+                  <div className="space-y-2">
+                    {order.items.map((item, index) => (
+                      <div key={index} className="flex justify-between items-center text-sm">
+                        <span>Product ID: {item.product_id.slice(-8).toUpperCase()}</span>
+                        <span>Qty: {item.quantity} × ₹{item.price.toLocaleString()}</span>
+                        {item.status && (
+                          <span className={`px-2 py-1 rounded text-xs ${
+                            item.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                            item.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {item.status}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Admin Notes */}
+                {order.admin_notes && (
+                  <div className="border-t border-gray-200 pt-4 mb-4">
+                    <h4 className="font-medium text-gray-900 mb-2">Admin Notes:</h4>
+                    <p className="text-sm text-gray-600">{order.admin_notes}</p>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                {order.status === 'pending' && (
+                  <div className="border-t border-gray-200 pt-4">
+                    <div className="flex space-x-3">
+                      <button
+                        onClick={() => handleOrderAction(order.id, 'accept')}
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm"
+                      >
+                        Accept Order
+                      </button>
+                      <button
+                        onClick={() => openPartialOrderModal(order)}
+                        className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 text-sm"
+                      >
+                        Partial Accept
+                      </button>
+                      <button
+                        onClick={() => handleOrderAction(order.id, 'reject')}
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm"
+                      >
+                        Reject Order
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {order.status === 'accepted' && order.payment_status === 'pending' && (
+                  <div className="border-t border-gray-200 pt-4">
+                    <p className="text-sm text-green-600 font-medium">
+                      ✅ Order accepted - Waiting for customer payment
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
