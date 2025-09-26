@@ -58,7 +58,11 @@ const Checkout = () => {
           price: item.product.price
         })),
         shipping_address: formData.shipping_address,
-        phone: formData.phone
+        phone: formData.phone,
+        promotion_code: appliedPromo ? appliedPromo.promotion.code : null,
+        discount_amount: appliedPromo ? appliedPromo.discount : 0,
+        original_amount: total + shipping,
+        final_amount: finalTotal
       };
 
       const response = await axios.post(`${API}/orders`, orderData);
