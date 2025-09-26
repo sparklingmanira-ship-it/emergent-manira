@@ -24,7 +24,7 @@ db = client[os.environ['DB_NAME']]
 
 # Security setup
 security = HTTPBearer()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import hashlib
 SECRET_KEY = os.environ.get('SECRET_KEY', secrets.token_urlsafe(32))
 ALGORITHM = "HS256"
 
