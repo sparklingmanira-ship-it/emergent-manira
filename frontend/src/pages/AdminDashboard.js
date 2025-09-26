@@ -823,6 +823,132 @@ const AdminDashboard = () => {
               </div>
             )}
           </div>
+        ) : activeTab === 'settings' ? (
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Store Settings</h2>
+            
+            <div className="space-y-8">
+              {/* Store Information */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Store Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Store Name</label>
+                    <input
+                      type="text"
+                      defaultValue="Manira Jewellery"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Store Email</label>
+                    <input
+                      type="email"
+                      defaultValue="contact@manira.com"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Store Phone</label>
+                    <input
+                      type="tel"
+                      defaultValue="+91 9876543210"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="INR">Indian Rupee (₹)</option>
+                      <option value="USD">US Dollar ($)</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Store Address</label>
+                  <textarea
+                    rows={3}
+                    defaultValue="Manira Headquarters, Mumbai, Maharashtra, India"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Shipping Settings */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Shipping Settings</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Free Shipping Threshold</label>
+                    <input
+                      type="number"
+                      defaultValue="2000"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Standard Shipping Cost</label>
+                    <input
+                      type="number"
+                      defaultValue="100"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Settings */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Payment Settings</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Razorpay Key ID</label>
+                    <input
+                      type="text"
+                      placeholder="Enter your Razorpay Key ID"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Razorpay Secret Key</label>
+                    <input
+                      type="password"
+                      placeholder="Enter your Razorpay Secret Key"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Notification Settings */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Notification Settings</h3>
+                <div className="space-y-3">
+                  <label className="flex items-center">
+                    <input type="checkbox" defaultChecked className="rounded border-gray-300 text-blue-600 mr-3" />
+                    <span className="text-sm text-gray-700">Email notifications for new orders</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" defaultChecked className="rounded border-gray-300 text-blue-600 mr-3" />
+                    <span className="text-sm text-gray-700">SMS notifications for order updates</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" className="rounded border-gray-300 text-blue-600 mr-3" />
+                    <span className="text-sm text-gray-700">Low inventory alerts</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <button
+                onClick={() => toast.success('Settings saved successfully!')}
+                className="manira-btn-primary px-6 py-3"
+              >
+                Save Settings
+              </button>
+            </div>
+          </div>
         ) : activeTab === 'orders' ? (
           <div className="space-y-6">
             <div className="bg-white rounded-2xl shadow-lg p-4 flex justify-between items-center">
