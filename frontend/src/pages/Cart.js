@@ -258,6 +258,7 @@ const Cart = () => {
               <div className="space-y-3">
                 <Link 
                   to="/checkout"
+                  state={{ appliedPromo }}
                   data-testid="proceed-to-checkout-btn"
                   className="w-full manira-btn-primary text-lg py-4 text-center block"
                 >
