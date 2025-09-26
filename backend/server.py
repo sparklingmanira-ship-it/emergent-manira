@@ -310,6 +310,35 @@ async def get_all_orders(admin_user: User = Depends(get_admin_user)):
     orders = await db.orders.find().to_list(length=100)
     return [Order(**order) for order in orders]
 
+# User Profile Routes
+@api_router.put("/profile")
+async def update_profile(profile_data: dict, current_user: User = Depends(get_current_user)):
+    """Update user profile"""
+    # Extract updatable fields
+    update_fields = {}
+    if "full_name" in profile_data:
+        update_fields["full_name"] = profile_data["full_name"]
+    if "phone" in profile_data:
+        update_fields["phone"] = profile_data["phone"]
+    if "address" in profile_data:
+        update_fields["address"] = profile_data["address"]
+    
+    if not update_fields:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    
+    # Update user in database
+    result = await db.users.update_one(
+        {"id": current_user.id},
+        {"$set": update_fields}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Return updated user data
+    updated_user = await db.users.find_one({"id": current_user.id})
+    return {"message": "Profile updated successfully", "user": User(**updated_user)}
+
 # Categories endpoint
 @api_router.get("/categories")
 async def get_categories():
