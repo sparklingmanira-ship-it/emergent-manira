@@ -880,7 +880,8 @@ const AdminDashboard = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Store Email</label>
                     <input
                       type="email"
-                      defaultValue="contact@manira.com"
+                      value={settings.store_email}
+                      onChange={(e) => handleSettingsChange('store_email', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
