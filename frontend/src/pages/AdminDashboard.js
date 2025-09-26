@@ -53,6 +53,10 @@ const AdminDashboard = () => {
       fetchOrders();
     } else if (activeTab === 'categories') {
       fetchCategories();
+    } else if (activeTab === 'customers') {
+      fetchCustomers();
+    } else if (activeTab === 'promotions') {
+      fetchPromotions();
     }
   }, [activeTab]);
 
