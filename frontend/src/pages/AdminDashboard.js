@@ -1241,6 +1241,144 @@ const AdminDashboard = () => {
           </div>
         )}
 
+        {/* Partial Order Modal */}
+        {showPartialModal && selectedOrder && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                Partial Order Acceptance - #{selectedOrder.id.slice(-8).toUpperCase()}
+              </h3>
+              
+              <div className="space-y-6">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Order Details</h4>
+                  <p className="text-sm text-gray-600">Original Amount: ₹{selectedOrder.total_amount.toLocaleString()}</p>
+                  <p className="text-sm text-gray-600">Items: {selectedOrder.items.length} products</p>
+                </div>
+
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-4">Select Items to Accept/Reject:</h4>
+                  <div className="space-y-3">
+                    {selectedOrder.items.map((item, index) => (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <p className="font-medium">Product #{item.product_id.slice(-8).toUpperCase()}</p>
+                            <p className="text-sm text-gray-600">Price: ₹{item.price.toLocaleString()} × {item.quantity}</p>
+                            <p className="text-sm text-gray-600">Subtotal: ₹{(item.price * item.quantity).toLocaleString()}</p>
+                          </div>
+                          
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => {
+                                const newItems = [...selectedOrder.items];
+                                newItems[index].status = 'accepted';
+                                setSelectedOrder({...selectedOrder, items: newItems});
+                              }}
+                              className={`px-3 py-1 rounded text-sm ${
+                                item.status === 'accepted' 
+                                  ? 'bg-green-600 text-white' 
+                                  : 'bg-gray-200 text-gray-700 hover:bg-green-100'
+                              }`}
+                            >
+                              Accept
+                            </button>
+                            <button
+                              onClick={() => {
+                                const newItems = [...selectedOrder.items];
+                                newItems[index].status = 'rejected';
+                                setSelectedOrder({...selectedOrder, items: newItems});
+                              }}
+                              className={`px-3 py-1 rounded text-sm ${
+                                item.status === 'rejected' 
+                                  ? 'bg-red-600 text-white' 
+                                  : 'bg-gray-200 text-gray-700 hover:bg-red-100'
+                              }`}
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {item.status === 'accepted' && (
+                          <div className="mt-3">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Accepted Quantity (max: {item.quantity})
+                            </label>
+                            <input
+                              type="number"
+                              min="1"
+                              max={item.quantity}
+                              defaultValue={item.quantity}
+                              onChange={(e) => {
+                                const newItems = [...selectedOrder.items];
+                                newItems[index].accepted_quantity = parseInt(e.target.value);
+                                setSelectedOrder({...selectedOrder, items: newItems});
+                              }}
+                              className="w-32 px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Admin Notes</label>
+                  <textarea
+                    rows={3}
+                    placeholder="Add notes for the customer about this partial acceptance..."
+                    onChange={(e) => setPartialNotes(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">New Order Summary</h4>
+                  <p className="text-sm text-gray-600">
+                    Accepted Items: {selectedOrder.items.filter(item => item.status === 'accepted').length}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    New Total: ₹{selectedOrder.items.reduce((total, item) => {
+                      if (item.status === 'accepted') {
+                        const qty = item.accepted_quantity || item.quantity;
+                        return total + (item.price * qty);
+                      }
+                      return total;
+                    }, 0).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex space-x-4 mt-8">
+                <button
+                  onClick={() => {
+                    const itemsStatus = selectedOrder.items.map(item => ({
+                      product_id: item.product_id,
+                      status: item.status || 'accepted',
+                      quantity: item.accepted_quantity || item.quantity
+                    }));
+                    handlePartialAccept(itemsStatus, partialNotes || 'Partial order acceptance');
+                  }}
+                  className="flex-1 manira-btn-primary py-3"
+                >
+                  Confirm Partial Acceptance
+                </button>
+                <button
+                  onClick={() => {
+                    setShowPartialModal(false);
+                    setSelectedOrder(null);
+                  }}
+                  className="flex-1 manira-btn-secondary py-3"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Add Product Modal */}
         {showAddProduct && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
