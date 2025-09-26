@@ -737,6 +737,43 @@ async def apply_promotion(promotion_data: dict, current_user: User = Depends(get
         "final_amount": max(0, order_amount - discount)
     }
 
+# Settings Management
+@api_router.get("/admin/settings")
+async def get_settings(admin_user: User = Depends(get_admin_user)):
+    """Get store settings"""
+    settings = await db.settings.find_one({"store_id": "main"})
+    if not settings:
+        # Return default settings
+        return {
+            "store_name": "Manira Jewellery",
+            "store_email": "contact@manira.com",
+            "store_phone": "+91 9876543210",
+            "store_address": "Manira Headquarters, Mumbai, Maharashtra, India",
+            "currency": "INR",
+            "free_shipping_threshold": 2000,
+            "standard_shipping_cost": 100,
+            "razorpay_key_id": "",
+            "razorpay_secret_key": "",
+            "email_notifications": True,
+            "sms_notifications": True,
+            "inventory_alerts": False
+        }
+    return settings
+
+@api_router.put("/admin/settings")
+async def update_settings(settings_data: dict, admin_user: User = Depends(get_admin_user)):
+    """Update store settings"""
+    settings_data["store_id"] = "main"
+    settings_data["updated_at"] = datetime.now(timezone.utc)
+    
+    await db.settings.update_one(
+        {"store_id": "main"},
+        {"$set": settings_data},
+        upsert=True
+    )
+    
+    return {"message": "Settings updated successfully"}
+
 # Enhanced Product Management
 @api_router.delete("/admin/products/{product_id}")
 async def delete_product(product_id: str, admin_user: User = Depends(get_admin_user)):
