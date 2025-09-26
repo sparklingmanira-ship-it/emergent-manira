@@ -293,10 +293,18 @@ const AdminDashboard = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button className="text-indigo-600 hover:text-indigo-900 mr-4">
+                        <button 
+                          onClick={() => startEditProduct(product)}
+                          className="text-indigo-600 hover:text-indigo-900 mr-4"
+                          title="Edit Product"
+                        >
                           <Edit className="h-4 w-4" />
                         </button>
-                        <button className="text-red-600 hover:text-red-900">
+                        <button 
+                          onClick={() => handleDeleteProduct(product.id)}
+                          className="text-red-600 hover:text-red-900"
+                          title="Delete Product"
+                        >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </td>
