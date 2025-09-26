@@ -11,13 +11,26 @@ const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [promotions, setPromotions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [showAddCategory, setShowAddCategory] = useState(false);
+  const [showAddPromotion, setShowAddPromotion] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [newCategory, setNewCategory] = useState('');
   const [showPartialModal, setShowPartialModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [newPromotion, setNewPromotion] = useState({
+    name: '',
+    discount_percentage: '',
+    discount_amount: '',
+    applicable_products: [],
+    start_date: '',
+    end_date: '',
+    min_order_amount: '',
+    code: ''
+  });
   
   const [newProduct, setNewProduct] = useState({
     name: '',
