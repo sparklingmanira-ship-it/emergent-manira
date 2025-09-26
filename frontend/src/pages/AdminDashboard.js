@@ -75,7 +75,7 @@ const AdminDashboard = () => {
       setShowAddProduct(false);
       setNewProduct({
         name: '', description: '', price: '', category: 'necklaces',
-        material: 'American Diamond', size: '', weight: '', image_url: '', inventory_count: ''
+        material: 'American Diamond', size: '', weight: '', image_url: '', inventory_count: '', sku: ''
       });
       fetchProducts();
     } catch (error) {
