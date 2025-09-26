@@ -658,6 +658,35 @@ async def create_promotion(promotion_data: PromotionCreate, admin_user: User = D
     await db.promotions.insert_one(promotion.dict())
     return promotion
 
+@api_router.put("/admin/promotions/{promotion_id}", response_model=Promotion)
+async def update_promotion(promotion_id: str, promotion_data: PromotionCreate, admin_user: User = Depends(get_admin_user)):
+    """Update a promotion"""
+    existing_promotion = await db.promotions.find_one({"id": promotion_id})
+    if not existing_promotion:
+        raise HTTPException(status_code=404, detail="Promotion not found")
+    
+    # Check if code already exists (excluding current promotion)
+    if promotion_data.code != existing_promotion["code"]:
+        existing_code = await db.promotions.find_one({"code": promotion_data.code, "id": {"$ne": promotion_id}})
+        if existing_code:
+            raise HTTPException(status_code=400, detail="Promotion code already exists")
+    
+    # Convert date strings to datetime
+    start_date = datetime.fromisoformat(promotion_data.start_date.replace('Z', '+00:00'))
+    end_date = datetime.fromisoformat(promotion_data.end_date.replace('Z', '+00:00'))
+    
+    update_data = {
+        **promotion_data.dict(exclude={'start_date', 'end_date'}),
+        "start_date": start_date,
+        "end_date": end_date,
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    await db.promotions.update_one({"id": promotion_id}, {"$set": update_data})
+    
+    updated_promotion = await db.promotions.find_one({"id": promotion_id})
+    return Promotion(**updated_promotion)
+
 @api_router.delete("/admin/promotions/{promotion_id}")
 async def delete_promotion(promotion_id: str, admin_user: User = Depends(get_admin_user)):
     """Delete a promotion"""
