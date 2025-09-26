@@ -493,7 +493,9 @@ const AdminDashboard = () => {
         {showAddProduct && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 max-h-screen overflow-y-auto">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Add New Product</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+              {editingProduct ? 'Edit Product' : 'Add New Product'}
+            </h3>
               
               <form onSubmit={handleAddProduct} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
