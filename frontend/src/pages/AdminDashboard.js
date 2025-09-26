@@ -979,10 +979,11 @@ const AdminDashboard = () => {
 
             <div className="mt-8 pt-6 border-t border-gray-200">
               <button
-                onClick={() => toast.success('Settings saved successfully!')}
-                className="manira-btn-primary px-6 py-3"
+                onClick={saveSettings}
+                disabled={settingsLoading}
+                className="manira-btn-primary px-6 py-3 disabled:opacity-50"
               >
-                Save Settings
+                {settingsLoading ? 'Saving...' : 'Save Settings'}
               </button>
             </div>
           </div>
