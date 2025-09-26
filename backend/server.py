@@ -132,6 +132,10 @@ class OrderCreate(BaseModel):
     items: List[dict]
     shipping_address: str
     phone: str
+    promotion_code: Optional[str] = None
+    discount_amount: Optional[float] = 0
+    original_amount: Optional[float] = None
+    final_amount: Optional[float] = None
 
 class CartItem(BaseModel):
     user_id: str
