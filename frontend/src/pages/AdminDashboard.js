@@ -295,6 +295,16 @@ const AdminDashboard = () => {
               Add Category
             </button>
           )}
+
+          {activeTab === 'promotions' && (
+            <button
+              onClick={() => setShowAddPromotion(true)}
+              className="manira-btn-primary flex items-center"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Add Promotion
+            </button>
+          )}
         </div>
 
         {/* Tabs */}
