@@ -959,6 +959,137 @@ const AdminDashboard = () => {
           </div>
         ) : null}
 
+        {/* Add Category Modal */}
+        {showAddCategory && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Add New Category</h3>
+              
+              <form onSubmit={handleAddCategory} className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Category Name"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                
+                <div className="flex space-x-4 pt-4">
+                  <button
+                    type="submit"
+                    className="flex-1 manira-btn-primary py-3"
+                  >
+                    Add Category
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddCategory(false)}
+                    className="flex-1 manira-btn-secondary py-3"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Add Promotion Modal */}
+        {showAddPromotion && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 max-h-screen overflow-y-auto">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Create New Promotion</h3>
+              
+              <form onSubmit={handleAddPromotion} className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Promotion Name"
+                  value={newPromotion.name}
+                  onChange={(e) => setNewPromotion({...newPromotion, name: e.target.value})}
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                
+                <input
+                  type="text"
+                  placeholder="Promotion Code (e.g., SAVE10)"
+                  value={newPromotion.code}
+                  onChange={(e) => setNewPromotion({...newPromotion, code: e.target.value.toUpperCase()})}
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="number"
+                    placeholder="Discount % (Optional)"
+                    value={newPromotion.discount_percentage}
+                    onChange={(e) => setNewPromotion({...newPromotion, discount_percentage: e.target.value, discount_amount: ''})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  
+                  <input
+                    type="number"
+                    placeholder="Discount ₹ (Optional)"
+                    value={newPromotion.discount_amount}
+                    onChange={(e) => setNewPromotion({...newPromotion, discount_amount: e.target.value, discount_percentage: ''})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <input
+                  type="number"
+                  placeholder="Minimum Order Amount (Optional)"
+                  value={newPromotion.min_order_amount}
+                  onChange={(e) => setNewPromotion({...newPromotion, min_order_amount: e.target.value})}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                    <input
+                      type="date"
+                      value={newPromotion.start_date}
+                      onChange={(e) => setNewPromotion({...newPromotion, start_date: e.target.value})}
+                      required
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                    <input
+                      type="date"
+                      value={newPromotion.end_date}
+                      onChange={(e) => setNewPromotion({...newPromotion, end_date: e.target.value})}
+                      required
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex space-x-4 pt-4">
+                  <button
+                    type="submit"
+                    className="flex-1 manira-btn-primary py-3"
+                  >
+                    Create Promotion
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddPromotion(false)}
+                    className="flex-1 manira-btn-secondary py-3"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
         {/* Add Product Modal */}
         {showAddProduct && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
