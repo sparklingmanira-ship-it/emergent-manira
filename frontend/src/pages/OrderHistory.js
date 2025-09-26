@@ -29,10 +29,27 @@ const OrderHistory = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'accepted': return 'bg-green-100 text-green-800';
+      case 'partially_accepted': return 'bg-blue-100 text-blue-800';
+      case 'rejected': return 'bg-red-100 text-red-800';
+      case 'cancelled': return 'bg-gray-100 text-gray-800';
       case 'confirmed': return 'bg-blue-100 text-blue-800';
       case 'shipped': return 'bg-purple-100 text-purple-800';
       case 'delivered': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    if (window.confirm('Are you sure you want to cancel this order?')) {
+      try {
+        await axios.put(`${API}/orders/${orderId}/cancel`);
+        toast.success('Order cancelled successfully!');
+        fetchOrders();
+      } catch (error) {
+        console.error('Error cancelling order:', error);
+        toast.error('Failed to cancel order');
+      }
     }
   };
 
