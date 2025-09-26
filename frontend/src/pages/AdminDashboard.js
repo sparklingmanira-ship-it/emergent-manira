@@ -33,6 +33,21 @@ const AdminDashboard = () => {
     code: ''
   });
   const [editingPromotion, setEditingPromotion] = useState(null);
+  const [settings, setSettings] = useState({
+    store_name: 'Manira Jewellery',
+    store_email: 'contact@manira.com',
+    store_phone: '+91 9876543210',
+    store_address: 'Manira Headquarters, Mumbai, Maharashtra, India',
+    currency: 'INR',
+    free_shipping_threshold: 2000,
+    standard_shipping_cost: 100,
+    razorpay_key_id: '',
+    razorpay_secret_key: '',
+    email_notifications: true,
+    sms_notifications: true,
+    inventory_alerts: false
+  });
+  const [settingsLoading, setSettingsLoading] = useState(false);
   
   const [newProduct, setNewProduct] = useState({
     name: '',
