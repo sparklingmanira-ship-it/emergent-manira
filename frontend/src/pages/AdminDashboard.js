@@ -1077,14 +1077,25 @@ const AdminDashboard = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-blue-600">
-                      ₹{order.total_amount.toLocaleString()}
-                      {order.original_amount && (
-                        <span className="text-sm text-gray-500 line-through ml-2">
-                          ₹{order.original_amount.toLocaleString()}
-                        </span>
+                    <div className="space-y-1">
+                      {order.original_amount && order.discount_amount > 0 ? (
+                        <>
+                          <p className="text-sm text-gray-500">
+                            Original: <span className="line-through">₹{order.original_amount.toLocaleString()}</span>
+                          </p>
+                          <p className="text-sm text-green-600">
+                            Discount ({order.promotion_code}): -₹{order.discount_amount.toLocaleString()}
+                          </p>
+                          <p className="text-2xl font-bold text-blue-600">
+                            Final: ₹{order.total_amount.toLocaleString()}
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-2xl font-bold text-blue-600">
+                          ₹{order.total_amount.toLocaleString()}
+                        </p>
                       )}
-                    </p>
+                    </div>
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${getOrderStatusColor(order.status)}`}>
                       {order.status.replace('_', ' ').toUpperCase()}
                     </span>
