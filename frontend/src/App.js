@@ -78,6 +78,14 @@ function AppContent() {
           } 
         />
         <Route 
+          path="/payment/:orderId" 
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
           path="/admin" 
           element={
             <ProtectedRoute adminOnly={true}>
