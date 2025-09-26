@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Package, Users, ShoppingBag, Edit, Trash2 } from 'lucide-react';
+import { Plus, Package, Users, ShoppingBag, Edit, Trash2, User, Download } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 
