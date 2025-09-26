@@ -333,6 +333,26 @@ const AdminDashboard = () => {
     setShowAddPromotion(true);
   };
 
+  const handleSettingsChange = (field, value) => {
+    setSettings(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const saveSettings = async () => {
+    setSettingsLoading(true);
+    try {
+      await axios.put(`${API}/admin/settings`, settings);
+      toast.success('Settings saved successfully!');
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      toast.error('Failed to save settings');
+    } finally {
+      setSettingsLoading(false);
+    }
+  };
+
   // Excel Export Functions
   const exportCustomersToExcel = () => {
     try {
