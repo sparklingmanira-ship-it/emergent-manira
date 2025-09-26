@@ -32,6 +32,7 @@ const AdminDashboard = () => {
     min_order_amount: '',
     code: ''
   });
+  const [editingPromotion, setEditingPromotion] = useState(null);
   
   const [newProduct, setNewProduct] = useState({
     name: '',
