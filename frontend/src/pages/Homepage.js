@@ -57,7 +57,7 @@ const Homepage = () => {
           <div className="fade-in-up">
             <div className="flex items-center justify-center mb-6">
               <img 
-                src="https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/4vcvlvye_IMG_6659.jpeg" 
+                src="https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/9ps7mw6c_image.png" 
                 alt="Manira Logo" 
                 className="h-20 w-20 object-contain mr-4"
               />
