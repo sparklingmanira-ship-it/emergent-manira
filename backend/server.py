@@ -66,6 +66,7 @@ class Product(BaseModel):
     weight: Optional[str] = None
     image_url: str
     inventory_count: int = 0
+    sku: Optional[str] = None  # SKU for inventory management
     is_active: bool = True
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
