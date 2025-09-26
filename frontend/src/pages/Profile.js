@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Phone, MapPin, Calendar } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Calendar, Edit2, Save, X } from 'lucide-react';
+import axios from 'axios';
+import { toast } from 'sonner';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const Profile = () => {
   const { user } = useAuth();
