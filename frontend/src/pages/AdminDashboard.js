@@ -1115,6 +1115,31 @@ const AdminDashboard = () => {
                   <div className="md:col-span-2">
                     <strong>Phone:</strong> {order.phone}
                   </div>
+                  
+                  {/* Price Breakdown */}
+                  {order.original_amount && order.discount_amount > 0 && (
+                    <div className="md:col-span-2 bg-green-50 border border-green-200 rounded-lg p-3">
+                      <h4 className="font-medium text-green-800 mb-2">💰 Price Breakdown:</h4>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex justify-between">
+                          <span>Selling Price:</span>
+                          <span>₹{order.original_amount.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between text-green-600">
+                          <span>Promotion ({order.promotion_code}):</span>
+                          <span>-₹{order.discount_amount.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between font-semibold text-green-800 border-t border-green-300 pt-1">
+                          <span>Customer Pays:</span>
+                          <span>₹{order.total_amount.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between text-green-600 text-xs">
+                          <span>Savings:</span>
+                          <span>₹{order.discount_amount.toLocaleString()} saved!</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Order Items Details */}
