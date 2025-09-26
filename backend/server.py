@@ -123,6 +123,8 @@ class Order(BaseModel):
     payment_method: str = "UPI"
     payment_status: str = "pending"  # pending, completed, failed
     admin_notes: Optional[str] = None
+    promotion_code: Optional[str] = None  # Applied promotion code
+    discount_amount: Optional[float] = 0  # Discount amount applied
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: Optional[datetime] = None
 
