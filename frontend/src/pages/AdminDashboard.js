@@ -83,7 +83,14 @@ const AdminDashboard = () => {
     }
   };
 
-  const sampleImages = [
+  const availableImages = [
+    // Your Manira Product Images
+    'https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/tp5jz4ds_IMG_6633.jpeg',
+    'https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/b167u5fl_IMG_6638.jpeg',
+    'https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/cjc9nvd2_IMG_6639.jpeg',
+    'https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/5pkyhqan_IMG_6640.jpeg',
+    'https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/k59u3pec_IMG_6641.jpeg',
+    // Additional Sample Images
     'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwxfHxkaWFtb25kJTIwamV3ZWxsZXJ5fGVufDB8fHx8MTc1ODg1NDIyMnww&ixlib=rb-4.1.0&q=85',
     'https://images.unsplash.com/photo-1607703829739-c05b7beddf60?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwyfHxkaWFtb25kJTIwamV3ZWxsZXJ5fGVufDB8fHx8MTc1ODg1NDIyMnww&ixlib=rb-4.1.0&q=85',
     'https://images.unsplash.com/photo-1693213085235-ea6deadf8cee?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHw0fHxkaWFtb25kJTIwamV3ZWxsZXJ5fGVufDB8fHx8MTc1ODg1NDIyMnww&ixlib=rb-4.1.0&q=85',
