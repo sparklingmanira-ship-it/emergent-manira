@@ -164,9 +164,33 @@ const Profile = () => {
               )}
               
               <div className="pt-6 border-t border-gray-200">
-                <button className="manira-btn-primary px-6 py-2">
-                  Edit Profile
-                </button>
+                {isEditing ? (
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={handleSave}
+                      disabled={loading}
+                      className="manira-btn-primary px-6 py-2 flex items-center disabled:opacity-50"
+                    >
+                      <Save className="h-4 w-4 mr-2" />
+                      {loading ? 'Saving...' : 'Save Changes'}
+                    </button>
+                    <button
+                      onClick={handleCancel}
+                      className="manira-btn-secondary px-6 py-2 flex items-center"
+                    >
+                      <X className="h-4 w-4 mr-2" />
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="manira-btn-primary px-6 py-2 flex items-center"
+                  >
+                    <Edit2 className="h-4 w-4 mr-2" />
+                    Edit Profile
+                  </button>
+                )}
               </div>
             </div>
           </div>
