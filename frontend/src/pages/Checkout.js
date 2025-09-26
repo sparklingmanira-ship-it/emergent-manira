@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, CreditCard, Package } from 'lucide-react';
+import { MapPin, CreditCard, Package, Tag } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 
