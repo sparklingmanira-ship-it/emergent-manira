@@ -48,6 +48,7 @@ const AdminDashboard = () => {
     inventory_alerts: false
   });
   const [settingsLoading, setSettingsLoading] = useState(false);
+  const [partialNotes, setPartialNotes] = useState('');
   
   const [newProduct, setNewProduct] = useState({
     name: '',
