@@ -261,14 +261,24 @@ const AdminDashboard = () => {
               <h3 className="text-xl font-semibold text-gray-900 mb-6">Add New Product</h3>
               
               <form onSubmit={handleAddProduct} className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Product Name"
-                  value={newProduct.name}
-                  onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-                  required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Product Name"
+                    value={newProduct.name}
+                    onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                    required
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  
+                  <input
+                    type="text"
+                    placeholder="SKU (e.g., MNR-001)"
+                    value={newProduct.sku}
+                    onChange={(e) => setNewProduct({...newProduct, sku: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
                 
                 <textarea
                   placeholder="Description"
