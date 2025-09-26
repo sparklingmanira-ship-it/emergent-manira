@@ -33,10 +33,38 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (activeTab === 'products') {
       fetchProducts();
+      fetchCategories();
     } else if (activeTab === 'orders') {
       fetchOrders();
+    } else if (activeTab === 'categories') {
+      fetchCategories();
     }
   }, [activeTab]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/categories`);
+      setCategories(response.data.categories);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
+    if (!newCategory.trim()) return;
+    
+    try {
+      await axios.post(`${API}/admin/categories`, { name: newCategory.toLowerCase() });
+      toast.success('Category added successfully!');
+      setNewCategory('');
+      setShowAddCategory(false);
+      fetchCategories();
+    } catch (error) {
+      console.error('Error adding category:', error);
+      toast.error('Failed to add category');
+    }
+  };
 
   const fetchProducts = async () => {
     try {
