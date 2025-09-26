@@ -111,6 +111,32 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchCustomers = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API}/admin/customers`);
+      setCustomers(response.data);
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      toast.error('Failed to load customers');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchPromotions = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API}/admin/promotions`);
+      setPromotions(response.data);
+    } catch (error) {
+      console.error('Error fetching promotions:', error);
+      toast.error('Failed to load promotions');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleAddProduct = async (e) => {
     e.preventDefault();
     
