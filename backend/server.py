@@ -618,14 +618,16 @@ async def delete_category(category_name: str, admin_user: User = Depends(get_adm
 @api_router.get("/admin/customers")
 async def get_customers(admin_user: User = Depends(get_admin_user)):
     """Get all registered customers"""
-    customers = await db.users.find({"is_admin": {"$ne": True}}).to_list(length=1000)
+    customers = await db.users.find().to_list(length=1000)
     
     # Get order count for each customer
+    customer_list = []
     for customer in customers:
         order_count = await db.orders.count_documents({"user_id": customer["id"]})
         customer["order_count"] = order_count
+        customer_list.append(customer)
     
-    return [User(**customer) for customer in customers]
+    return customer_list
 
 # Promotions Management
 @api_router.get("/admin/promotions", response_model=List[Promotion])
