@@ -1152,7 +1152,7 @@ const AdminDashboard = () => {
                     type="submit"
                     className="flex-1 manira-btn-primary py-3"
                   >
-                    Create Promotion
+                    {editingPromotion ? 'Update Promotion' : 'Create Promotion'}
                   </button>
                   <button
                     type="button"
