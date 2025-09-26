@@ -295,8 +295,18 @@ const AdminDashboard = () => {
   };
 
   const editPromotion = (promotion) => {
-    // Implementation for editing promotions
-    toast.info('Edit promotion feature coming soon!');
+    setEditingPromotion(promotion);
+    setNewPromotion({
+      name: promotion.name,
+      discount_percentage: promotion.discount_percentage || '',
+      discount_amount: promotion.discount_amount || '',
+      applicable_products: promotion.applicable_products || [],
+      start_date: new Date(promotion.start_date).toISOString().split('T')[0],
+      end_date: new Date(promotion.end_date).toISOString().split('T')[0],
+      min_order_amount: promotion.min_order_amount || '',
+      code: promotion.code
+    });
+    setShowAddPromotion(true);
   };
 
   // Excel Export Functions
