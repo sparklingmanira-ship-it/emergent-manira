@@ -315,20 +315,30 @@ async def update_cart_quantity(product_id: str, quantity_data: dict, current_use
 # Order Routes
 @api_router.post("/orders", response_model=Order)
 async def create_order(order_data: OrderCreate, current_user: User = Depends(get_current_user)):
-    # Calculate total amount
-    total_amount = 0
+    # Calculate original total amount
+    original_total = 0
     for item in order_data.items:
         product = await db.products.find_one({"id": item["product_id"]})
         if product:
-            total_amount += product["price"] * item["quantity"]
+            original_total += product["price"] * item["quantity"]
     
-    # Create order
+    # Apply promotion discount if provided
+    final_total = original_total
+    discount_amount = order_data.discount_amount or 0
+    
+    if order_data.promotion_code and discount_amount > 0:
+        final_total = max(0, original_total - discount_amount)
+    
+    # Create order with promotion details
     order = Order(
         user_id=current_user.id,
         items=order_data.items,
-        total_amount=total_amount,
+        total_amount=final_total,  # Final amount after discount
+        original_amount=original_total if discount_amount > 0 else None,  # Original before discount
         shipping_address=order_data.shipping_address,
-        phone=order_data.phone
+        phone=order_data.phone,
+        promotion_code=order_data.promotion_code,
+        discount_amount=discount_amount
     )
     
     await db.orders.insert_one(order.dict())
