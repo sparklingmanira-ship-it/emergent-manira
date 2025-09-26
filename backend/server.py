@@ -398,6 +398,30 @@ async def cancel_order(order_id: str, current_user: User = Depends(get_current_u
     
     return {"message": "Order cancelled successfully"}
 
+@api_router.put("/admin/orders/{order_id}/payment")
+async def update_payment_status(order_id: str, payment_data: dict, admin_user: User = Depends(get_admin_user)):
+    """Update payment status for an order"""
+    payment_status = payment_data.get("payment_status")
+    payment_method = payment_data.get("payment_method")
+    
+    order = await db.orders.find_one({"id": order_id})
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    update_data = {"updated_at": datetime.now(timezone.utc)}
+    if payment_status:
+        update_data["payment_status"] = payment_status
+    if payment_method:
+        update_data["payment_method"] = payment_method
+    
+    # If payment completed, update order status
+    if payment_status == "completed":
+        update_data["status"] = "confirmed"
+    
+    await db.orders.update_one({"id": order_id}, {"$set": update_data})
+    
+    return {"message": "Payment status updated successfully"}
+
 # User Profile Routes
 @api_router.put("/profile")
 async def update_profile(profile_data: dict, current_user: User = Depends(get_current_user)):
