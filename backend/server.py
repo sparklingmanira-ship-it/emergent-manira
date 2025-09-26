@@ -313,6 +313,91 @@ async def get_all_orders(admin_user: User = Depends(get_admin_user)):
     orders = await db.orders.find().to_list(length=100)
     return [Order(**order) for order in orders]
 
+# Order Management Endpoints
+@api_router.put("/admin/orders/{order_id}/review")
+async def review_order(order_id: str, review_data: dict, admin_user: User = Depends(get_admin_user)):
+    """Admin reviews order - accept fully, partially, or reject"""
+    action = review_data.get("action")  # "accept", "partial", "reject"
+    items_status = review_data.get("items_status", [])  # [{product_id, status, quantity}]
+    admin_notes = review_data.get("admin_notes", "")
+    
+    order = await db.orders.find_one({"id": order_id})
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    if order["status"] not in ["pending", "review"]:
+        raise HTTPException(status_code=400, detail="Order cannot be modified in current status")
+    
+    # Calculate new total for partial orders
+    new_total = 0
+    updated_items = []
+    
+    if action == "accept":
+        # Accept all items
+        for item in order["items"]:
+            item["status"] = "accepted"
+            updated_items.append(item)
+            new_total += item["price"] * item["quantity"]
+        new_status = "accepted"
+        
+    elif action == "partial":
+        # Handle partial acceptance
+        original_amount = order["total_amount"]
+        for item_update in items_status:
+            # Find matching item in order
+            for item in order["items"]:
+                if item["product_id"] == item_update["product_id"]:
+                    item["status"] = item_update["status"]
+                    if item_update["status"] == "accepted":
+                        # Update quantity if provided
+                        if "quantity" in item_update:
+                            item["quantity"] = item_update["quantity"]
+                        new_total += item["price"] * item["quantity"]
+                    updated_items.append(item)
+                    break
+        new_status = "partially_accepted"
+        
+    elif action == "reject":
+        # Reject entire order
+        for item in order["items"]:
+            item["status"] = "rejected"
+            updated_items.append(item)
+        new_total = 0
+        new_status = "rejected"
+    
+    # Update order in database
+    update_data = {
+        "status": new_status,
+        "items": updated_items,
+        "admin_notes": admin_notes,
+        "updated_at": datetime.now(timezone.utc)
+    }
+    
+    if action == "partial":
+        update_data["original_amount"] = order["total_amount"]
+        update_data["total_amount"] = new_total
+    
+    await db.orders.update_one({"id": order_id}, {"$set": update_data})
+    
+    return {"message": f"Order {action}ed successfully", "new_total": new_total}
+
+@api_router.put("/orders/{order_id}/cancel")
+async def cancel_order(order_id: str, current_user: User = Depends(get_current_user)):
+    """Customer cancels their order"""
+    order = await db.orders.find_one({"id": order_id, "user_id": current_user.id})
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    if order["status"] not in ["pending", "review"]:
+        raise HTTPException(status_code=400, detail="Order cannot be cancelled in current status")
+    
+    await db.orders.update_one(
+        {"id": order_id},
+        {"$set": {"status": "cancelled", "updated_at": datetime.now(timezone.utc)}}
+    )
+    
+    return {"message": "Order cancelled successfully"}
+
 # User Profile Routes
 @api_router.put("/profile")
 async def update_profile(profile_data: dict, current_user: User = Depends(get_current_user)):
