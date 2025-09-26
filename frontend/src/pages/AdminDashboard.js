@@ -992,17 +992,80 @@ const AdminDashboard = () => {
           </div>
         ) : activeTab === 'orders' ? (
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-lg p-4 flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-gray-900">Order Management</h2>
-              <button
-                onClick={exportOrdersToExcel}
-                className="manira-btn-secondary flex items-center text-sm px-4 py-2"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export Orders to Excel
-              </button>
+            <div className="bg-white rounded-2xl shadow-lg p-4">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <h2 className="text-xl font-semibold text-gray-900">Order Management</h2>
+                
+                <div className="flex flex-col sm:flex-row gap-4 items-center">
+                  {/* Status Filter */}
+                  <select
+                    value={orderStatusFilter}
+                    onChange={(e) => setOrderStatusFilter(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="partially_accepted">Partially Accepted</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                  </select>
+
+                  {/* Date Filter */}
+                  <select
+                    value={orderDateFilter}
+                    onChange={(e) => setOrderDateFilter(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                  </select>
+
+                  <button
+                    onClick={exportOrdersToExcel}
+                    className="manira-btn-secondary flex items-center text-sm px-4 py-2"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Export to Excel
+                  </button>
+                </div>
+              </div>
             </div>
-            {orders.map((order) => (
+
+            {/* Filtered Orders */}
+            {orders
+              .filter(order => {
+                // Status filter
+                if (orderStatusFilter !== 'all' && order.status !== orderStatusFilter) {
+                  return false;
+                }
+                
+                // Date filter
+                if (orderDateFilter !== 'all') {
+                  const orderDate = new Date(order.created_at);
+                  const now = new Date();
+                  
+                  switch (orderDateFilter) {
+                    case 'today':
+                      return orderDate.toDateString() === now.toDateString();
+                    case 'week':
+                      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                      return orderDate >= weekAgo;
+                    case 'month':
+                      return orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear();
+                    default:
+                      return true;
+                  }
+                }
+                
+                return true;
+              })
+              .map((order) => (
               <div key={order.id} className="bg-white rounded-2xl shadow-lg p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
