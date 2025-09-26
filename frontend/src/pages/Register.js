@@ -60,7 +60,7 @@ const Register = () => {
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <img 
-            src="https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/4vcvlvye_IMG_6659.jpeg" 
+            src="https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/9ps7mw6c_image.png" 
             alt="Manira Logo" 
             className="mx-auto h-16 w-16 object-contain"
           />
