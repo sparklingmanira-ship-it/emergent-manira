@@ -247,6 +247,30 @@ async def get_cart(current_user: User = Depends(get_current_user)):
     
     return enriched_cart
 
+# Additional Cart Routes
+@api_router.delete("/cart/{product_id}")
+async def remove_from_cart(product_id: str, current_user: User = Depends(get_current_user)):
+    result = await db.cart.delete_one({"user_id": current_user.id, "product_id": product_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Item not found in cart")
+    return {"message": "Item removed from cart"}
+
+@api_router.put("/cart/{product_id}")
+async def update_cart_quantity(product_id: str, quantity_data: dict, current_user: User = Depends(get_current_user)):
+    quantity = quantity_data.get("quantity", 1)
+    if quantity <= 0:
+        return await remove_from_cart(product_id, current_user)
+    
+    result = await db.cart.update_one(
+        {"user_id": current_user.id, "product_id": product_id},
+        {"$set": {"quantity": quantity}}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Item not found in cart")
+    
+    return {"message": "Quantity updated"}
+
 # Order Routes
 @api_router.post("/orders", response_model=Order)
 async def create_order(order_data: OrderCreate, current_user: User = Depends(get_current_user)):
