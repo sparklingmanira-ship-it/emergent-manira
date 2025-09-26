@@ -591,6 +591,19 @@ async def delete_category(category_name: str, admin_user: User = Depends(get_adm
     
     return {"message": "Category deleted successfully"}
 
+# Customer Management
+@api_router.get("/admin/customers")
+async def get_customers(admin_user: User = Depends(get_admin_user)):
+    """Get all registered customers"""
+    customers = await db.users.find({"is_admin": {"$ne": True}}).to_list(length=1000)
+    
+    # Get order count for each customer
+    for customer in customers:
+        order_count = await db.orders.count_documents({"user_id": customer["id"]})
+        customer["order_count"] = order_count
+    
+    return [User(**customer) for customer in customers]
+
 # Enhanced Product Management
 @api_router.delete("/admin/products/{product_id}")
 async def delete_product(product_id: str, admin_user: User = Depends(get_admin_user)):
