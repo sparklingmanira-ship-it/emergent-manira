@@ -627,6 +627,76 @@ async def get_customers(admin_user: User = Depends(get_admin_user)):
     
     return [User(**customer) for customer in customers]
 
+# Promotions Management
+@api_router.get("/admin/promotions", response_model=List[Promotion])
+async def get_promotions(admin_user: User = Depends(get_admin_user)):
+    """Get all promotions"""
+    promotions = await db.promotions.find().to_list(length=100)
+    return [Promotion(**promotion) for promotion in promotions]
+
+@api_router.post("/admin/promotions", response_model=Promotion)
+async def create_promotion(promotion_data: PromotionCreate, admin_user: User = Depends(get_admin_user)):
+    """Create a new promotion"""
+    # Check if code already exists
+    existing = await db.promotions.find_one({"code": promotion_data.code})
+    if existing:
+        raise HTTPException(status_code=400, detail="Promotion code already exists")
+    
+    # Convert date strings to datetime
+    from datetime import datetime
+    start_date = datetime.fromisoformat(promotion_data.start_date.replace('Z', '+00:00'))
+    end_date = datetime.fromisoformat(promotion_data.end_date.replace('Z', '+00:00'))
+    
+    promotion = Promotion(
+        **promotion_data.dict(exclude={'start_date', 'end_date'}),
+        start_date=start_date,
+        end_date=end_date
+    )
+    
+    await db.promotions.insert_one(promotion.dict())
+    return promotion
+
+@api_router.delete("/admin/promotions/{promotion_id}")
+async def delete_promotion(promotion_id: str, admin_user: User = Depends(get_admin_user)):
+    """Delete a promotion"""
+    result = await db.promotions.delete_one({"id": promotion_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Promotion not found")
+    
+    return {"message": "Promotion deleted successfully"}
+
+@api_router.post("/apply-promotion")
+async def apply_promotion(promotion_data: dict, current_user: User = Depends(get_current_user)):
+    """Apply promotion code to calculate discount"""
+    code = promotion_data.get("code")
+    order_amount = promotion_data.get("order_amount", 0)
+    
+    promotion = await db.promotions.find_one({
+        "code": code,
+        "is_active": True,
+        "start_date": {"$lte": datetime.now(timezone.utc)},
+        "end_date": {"$gte": datetime.now(timezone.utc)}
+    })
+    
+    if not promotion:
+        raise HTTPException(status_code=404, detail="Invalid or expired promotion code")
+    
+    if promotion.get("min_order_amount") and order_amount < promotion["min_order_amount"]:
+        raise HTTPException(status_code=400, detail=f"Minimum order amount is ₹{promotion['min_order_amount']}")
+    
+    # Calculate discount
+    discount = 0
+    if promotion.get("discount_percentage"):
+        discount = (order_amount * promotion["discount_percentage"]) / 100
+    elif promotion.get("discount_amount"):
+        discount = promotion["discount_amount"]
+    
+    return {
+        "promotion": Promotion(**promotion),
+        "discount": discount,
+        "final_amount": max(0, order_amount - discount)
+    }
+
 # Enhanced Product Management
 @api_router.delete("/admin/products/{product_id}")
 async def delete_product(product_id: str, admin_user: User = Depends(get_admin_user)):
