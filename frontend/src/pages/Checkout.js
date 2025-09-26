@@ -81,7 +81,8 @@ const Checkout = () => {
 
   const total = getCartTotal();
   const shipping = total > 2000 ? 0 : 100;
-  const finalTotal = total + shipping;
+  const discount = appliedPromo ? appliedPromo.discount : 0;
+  const finalTotal = Math.max(0, total + shipping - discount);
 
   if (cartItems.length === 0) {
     navigate('/cart');
