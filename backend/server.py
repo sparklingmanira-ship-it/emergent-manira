@@ -105,7 +105,8 @@ class CartItem(BaseModel):
 
 # Helper Functions
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    # Truncate password to avoid bcrypt 72 byte limitation
+    return pwd_context.hash(password[:72])
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
