@@ -22,7 +22,8 @@ const AdminDashboard = () => {
     size: '',
     weight: '',
     image_url: '',
-    inventory_count: ''
+    inventory_count: '',
+    sku: ''
   });
 
   useEffect(() => {
