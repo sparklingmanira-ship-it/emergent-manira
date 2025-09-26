@@ -353,6 +353,59 @@ async def get_categories():
         ]
     }
 
+# Admin Category Management
+@api_router.get("/admin/categories")
+async def get_admin_categories(admin_user: User = Depends(get_admin_user)):
+    # Get categories from database or return default ones
+    categories = await db.categories.find().to_list(length=100)
+    if not categories:
+        # Return default categories
+        default_categories = ["necklaces", "rings", "earrings", "bracelets", "pendants", "bangles"]
+        return {"categories": default_categories}
+    
+    return {"categories": [cat["name"] for cat in categories]}
+
+@api_router.post("/admin/categories")
+async def add_category(category_data: dict, admin_user: User = Depends(get_admin_user)):
+    category_name = category_data.get("name", "").lower().strip()
+    if not category_name:
+        raise HTTPException(status_code=400, detail="Category name is required")
+    
+    # Check if category already exists
+    existing = await db.categories.find_one({"name": category_name})
+    if existing:
+        raise HTTPException(status_code=400, detail="Category already exists")
+    
+    # Add category
+    await db.categories.insert_one({
+        "name": category_name,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {"message": "Category added successfully"}
+
+@api_router.delete("/admin/categories/{category_name}")
+async def delete_category(category_name: str, admin_user: User = Depends(get_admin_user)):
+    # Check if any products use this category
+    products_with_category = await db.products.find({"category": category_name}).to_list(length=1)
+    if products_with_category:
+        raise HTTPException(status_code=400, detail="Cannot delete category that has products")
+    
+    result = await db.categories.delete_one({"name": category_name})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Category not found")
+    
+    return {"message": "Category deleted successfully"}
+
+# Enhanced Product Management
+@api_router.delete("/admin/products/{product_id}")
+async def delete_product(product_id: str, admin_user: User = Depends(get_admin_user)):
+    result = await db.products.delete_one({"id": product_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    return {"message": "Product deleted successfully"}
+
 # Include the router in the main app
 app.include_router(api_router)
 
