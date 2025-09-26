@@ -24,7 +24,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img 
-              src="https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/4vcvlvye_IMG_6659.jpeg" 
+              src="https://customer-assets.emergentagent.com/job_jewel-basket/artifacts/9ps7mw6c_image.png" 
               alt="Manira Logo" 
               className="h-10 w-10 object-contain"
             />
