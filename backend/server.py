@@ -85,14 +85,17 @@ class ProductCreate(BaseModel):
 class Order(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
-    items: List[dict]  # [{product_id, quantity, price}]
+    items: List[dict]  # [{product_id, quantity, price, status: accepted/rejected}]
     total_amount: float
-    status: str = "pending"  # pending, confirmed, shipped, delivered
+    original_amount: Optional[float] = None  # Store original amount for partial orders
+    status: str = "pending"  # pending, review, accepted, partially_accepted, rejected, cancelled, shipped, delivered
     shipping_address: str
     phone: str
     payment_method: str = "UPI"
     payment_status: str = "pending"  # pending, completed, failed
+    admin_notes: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: Optional[datetime] = None
 
 class OrderCreate(BaseModel):
     items: List[dict]
