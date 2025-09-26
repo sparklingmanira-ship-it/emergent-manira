@@ -138,11 +138,44 @@ const OrderHistory = () => {
                           <CreditCard className="h-4 w-4 mr-2" />
                           Payment Method
                         </div>
-                        <p className="text-gray-900 text-sm">{order.payment_method}</p>
+                        <p className="text-gray-900 text-sm">{order.payment_method} ({order.payment_status})</p>
                       </div>
                     </div>
                   </div>
                 </div>
+
+                {/* Order Actions */}
+                {(order.status === 'pending' || order.status === 'review') && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => handleCancelOrder(order.id)}
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm"
+                    >
+                      Cancel Order
+                    </button>
+                  </div>
+                )}
+
+                {order.status === 'accepted' && order.payment_status === 'pending' && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <p className="text-sm text-green-600 font-medium mb-2">
+                      ✅ Your order has been accepted by Manira!
+                    </p>
+                    <button
+                      onClick={() => window.location.href = `/payment/${order.id}`}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm"
+                    >
+                      Complete Payment
+                    </button>
+                  </div>
+                )}
+
+                {order.admin_notes && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Note from Manira:</h4>
+                    <p className="text-sm text-gray-600">{order.admin_notes}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
