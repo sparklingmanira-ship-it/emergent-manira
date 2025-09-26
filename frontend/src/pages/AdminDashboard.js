@@ -267,8 +267,17 @@ const AdminDashboard = () => {
         min_order_amount: newPromotion.min_order_amount ? parseFloat(newPromotion.min_order_amount) : null
       };
       
-      await axios.post(`${API}/admin/promotions`, promotionData);
-      toast.success('Promotion created successfully!');
+      if (editingPromotion) {
+        // Update existing promotion
+        await axios.put(`${API}/admin/promotions/${editingPromotion.id}`, promotionData);
+        toast.success('Promotion updated successfully!');
+        setEditingPromotion(null);
+      } else {
+        // Create new promotion
+        await axios.post(`${API}/admin/promotions`, promotionData);
+        toast.success('Promotion created successfully!');
+      }
+      
       setShowAddPromotion(false);
       setNewPromotion({
         name: '', discount_percentage: '', discount_amount: '', applicable_products: [],
@@ -276,8 +285,8 @@ const AdminDashboard = () => {
       });
       fetchPromotions();
     } catch (error) {
-      console.error('Error creating promotion:', error);
-      toast.error('Failed to create promotion');
+      console.error('Error saving promotion:', error);
+      toast.error('Failed to save promotion');
     }
   };
 
