@@ -95,6 +95,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <AppContent />
+          <Toaster position="top-right" richColors />
         </CartProvider>
       </AuthProvider>
     </Router>
