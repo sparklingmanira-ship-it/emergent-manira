@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Package, Users, ShoppingBag, Edit, Trash2, User, Download } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
+import * as XLSX from 'xlsx';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
