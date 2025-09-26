@@ -288,6 +288,26 @@ const AdminDashboard = () => {
               Orders
             </button>
             <button
+              onClick={() => setActiveTab('customers')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'customers'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Customers
+            </button>
+            <button
+              onClick={() => setActiveTab('promotions')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'promotions'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Promotions
+            </button>
+            <button
               onClick={() => setActiveTab('settings')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'settings'
