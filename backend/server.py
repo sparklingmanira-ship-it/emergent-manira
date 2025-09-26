@@ -105,11 +105,11 @@ class CartItem(BaseModel):
 
 # Helper Functions
 def hash_password(password: str) -> str:
-    # Truncate password to avoid bcrypt 72 byte limitation
-    return pwd_context.hash(password[:72])
+    # Simple SHA256 hash for demo purposes
+    return hashlib.sha256(password.encode()).hexdigest()
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password[:72], hashed_password)
+    return hashlib.sha256(plain_password.encode()).hexdigest() == hashed_password
 
 def create_access_token(data: dict):
     to_encode = data.copy()
