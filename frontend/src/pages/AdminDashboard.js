@@ -344,6 +344,26 @@ const AdminDashboard = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Choose Product Image
                   </label>
+                  
+                  {/* File Upload Option */}
+                  <div className="mb-3 p-4 border-2 border-dashed border-gray-300 rounded-lg">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          // Create object URL for preview
+                          const imageUrl = URL.createObjectURL(file);
+                          setNewProduct({...newProduct, image_url: imageUrl, image_file: file});
+                        }
+                      }}
+                      className="w-full p-2 text-sm text-gray-600"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Upload your own product image (JPG, PNG, WEBP)</p>
+                  </div>
+                  
+                  {/* URL Input Option */}
                   <div className="mb-3">
                     <input
                       type="url"
