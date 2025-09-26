@@ -333,8 +333,8 @@ const AdminDashboard = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Choose Product Image
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {sampleImages.map((img, index) => (
+                  <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto">
+                    {availableImages.map((img, index) => (
                       <button
                         key={index}
                         type="button"
