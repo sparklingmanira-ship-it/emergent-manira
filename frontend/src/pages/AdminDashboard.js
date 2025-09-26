@@ -16,6 +16,8 @@ const AdminDashboard = () => {
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [newCategory, setNewCategory] = useState('');
+  const [showPartialModal, setShowPartialModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   
   const [newProduct, setNewProduct] = useState({
     name: '',
