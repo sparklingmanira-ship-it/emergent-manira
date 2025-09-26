@@ -167,16 +167,21 @@ const OrderHistory = () => {
                   </div>
                 )}
 
-                {order.status === 'accepted' && order.payment_status === 'pending' && (
+                {(order.status === 'accepted' || order.status === 'partially_accepted') && order.payment_status === 'pending' && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <p className="text-sm text-green-600 font-medium mb-2">
-                      ✅ Your order has been accepted by Manira!
+                      ✅ Your order has been {order.status === 'partially_accepted' ? 'partially accepted' : 'accepted'} by Manira!
                     </p>
+                    {order.status === 'partially_accepted' && (
+                      <p className="text-sm text-blue-600 mb-2">
+                        💡 Some items were adjusted. You'll pay only for the accepted items.
+                      </p>
+                    )}
                     <button
                       onClick={() => window.location.href = `/payment/${order.id}`}
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm"
                     >
-                      Complete Payment
+                      Complete Payment - ₹{order.total_amount.toLocaleString()}
                     </button>
                   </div>
                 )}
