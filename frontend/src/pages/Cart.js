@@ -184,10 +184,59 @@ const Cart = () => {
               </h2>
               
               <div className="space-y-4 mb-6">
+                {/* Promotion Code Section */}
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                    <Tag className="h-4 w-4 mr-2" />
+                    Promotion Code
+                  </h3>
+                  
+                  {appliedPromo ? (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-sm font-medium text-green-800">{appliedPromo.promotion.code}</p>
+                          <p className="text-xs text-green-600">You save ₹{appliedPromo.discount}</p>
+                        </div>
+                        <button
+                          onClick={removePromoCode}
+                          className="text-red-600 hover:text-red-800 text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        placeholder="Enter promotion code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <button
+                        onClick={applyPromoCode}
+                        disabled={promoLoading}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                      >
+                        {promoLoading ? 'Applying...' : 'Apply'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
                   <span className="font-medium">₹{getCartTotal().toLocaleString()}</span>
                 </div>
+                
+                {appliedPromo && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Discount ({appliedPromo.promotion.code})</span>
+                    <span className="font-medium text-green-600">-₹{appliedPromo.discount.toLocaleString()}</span>
+                  </div>
+                )}
                 
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
@@ -200,7 +249,7 @@ const Cart = () => {
                   <div className="flex justify-between text-lg font-semibold">
                     <span>Total</span>
                     <span data-testid="cart-total" className="text-blue-600">
-                      ₹{(getCartTotal() + (getCartTotal() > 2000 ? 0 : 100)).toLocaleString()}
+                      ₹{getFinalTotal().toLocaleString()}
                     </span>
                   </div>
                 </div>
