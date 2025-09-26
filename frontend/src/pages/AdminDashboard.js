@@ -102,8 +102,17 @@ const AdminDashboard = () => {
         inventory_count: parseInt(newProduct.inventory_count)
       };
       
-      await axios.post(`${API}/admin/products`, productData);
-      toast.success('Product added successfully!');
+      if (editingProduct) {
+        // Update existing product
+        await axios.put(`${API}/admin/products/${editingProduct.id}`, productData);
+        toast.success('Product updated successfully!');
+        setEditingProduct(null);
+      } else {
+        // Add new product
+        await axios.post(`${API}/admin/products`, productData);
+        toast.success('Product added successfully!');
+      }
+      
       setShowAddProduct(false);
       setNewProduct({
         name: '', description: '', price: '', category: 'necklaces',
@@ -111,8 +120,38 @@ const AdminDashboard = () => {
       });
       fetchProducts();
     } catch (error) {
-      console.error('Error adding product:', error);
-      toast.error('Failed to add product');
+      console.error('Error saving product:', error);
+      toast.error('Failed to save product');
+    }
+  };
+
+  const startEditProduct = (product) => {
+    setEditingProduct(product);
+    setNewProduct({
+      name: product.name,
+      description: product.description,
+      price: product.price.toString(),
+      category: product.category,
+      material: product.material,
+      size: product.size || '',
+      weight: product.weight || '',
+      image_url: product.image_url,
+      inventory_count: product.inventory_count.toString(),
+      sku: product.sku || ''
+    });
+    setShowAddProduct(true);
+  };
+
+  const handleDeleteProduct = async (productId) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        await axios.delete(`${API}/admin/products/${productId}`);
+        toast.success('Product deleted successfully!');
+        fetchProducts();
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        toast.error('Failed to delete product');
+      }
     }
   };
 
