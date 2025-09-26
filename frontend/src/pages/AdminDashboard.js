@@ -653,7 +653,7 @@ const AdminDashboard = () => {
                     type="submit"
                     className="flex-1 manira-btn-primary py-3"
                   >
-                    Add Product
+                    {editingProduct ? 'Update Product' : 'Add Product'}
                   </button>
                   <button
                     type="button"
