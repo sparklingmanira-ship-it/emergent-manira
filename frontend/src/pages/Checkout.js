@@ -13,6 +13,7 @@ const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [formData, setFormData] = useState({
     shipping_address: user?.address || '',
@@ -20,6 +21,14 @@ const Checkout = () => {
   });
   const [loading, setLoading] = useState(false);
   const [showUpiModal, setShowUpiModal] = useState(false);
+  const [appliedPromo, setAppliedPromo] = useState(null);
+
+  useEffect(() => {
+    // Get promotion data from location state (passed from cart)
+    if (location.state?.appliedPromo) {
+      setAppliedPromo(location.state.appliedPromo);
+    }
+  }, [location]);
 
   const handleInputChange = (e) => {
     setFormData({
