@@ -11,7 +11,7 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 import jwt
-from passlib.context import CryptContext
+# Removed passlib import to avoid bcrypt issues
 import secrets
 
 ROOT_DIR = Path(__file__).parent
