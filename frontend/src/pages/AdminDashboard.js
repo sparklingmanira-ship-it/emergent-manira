@@ -665,6 +665,53 @@ const AdminDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Add Category Modal */}
+        {showAddCategory && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Add New Category</h3>
+              
+              <form onSubmit={handleAddCategory} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter category name (e.g., Anklets, Chains)"
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    required
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Category names will be automatically converted to lowercase
+                  </p>
+                </div>
+                
+                <div className="flex space-x-4 pt-4">
+                  <button
+                    type="submit"
+                    className="flex-1 manira-btn-primary py-3"
+                  >
+                    Add Category
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAddCategory(false);
+                      setNewCategory('');
+                    }}
+                    className="flex-1 manira-btn-secondary py-3"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
