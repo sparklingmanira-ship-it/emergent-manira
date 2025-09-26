@@ -25,8 +25,14 @@ db = client[os.environ['DB_NAME']]
 # Security setup
 security = HTTPBearer()
 import hashlib
+import razorpay
 SECRET_KEY = os.environ.get('SECRET_KEY', secrets.token_urlsafe(32))
 ALGORITHM = "HS256"
+
+# Razorpay Configuration
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'your_test_key_id')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'your_test_key_secret')
+razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
 # Create the main app
 app = FastAPI(title="Manira Jewellery API", version="1.0.0")
