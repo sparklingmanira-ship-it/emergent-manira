@@ -15,6 +15,7 @@ import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import OrderHistory from './pages/OrderHistory';
 import Checkout from './pages/Checkout';
+import Payment from './pages/Payment';
 
 // Context
 import { AuthProvider, useAuth } from './context/AuthContext';
