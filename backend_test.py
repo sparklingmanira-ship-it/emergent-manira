@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 class ManiraAPITester:
-    def __init__(self, base_url="https://jewel-basket.preview.emergentagent.com"):
+    def __init__(self, base_url="https://manira-sparkle.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.token = None
