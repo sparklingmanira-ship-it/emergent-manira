@@ -916,6 +916,26 @@ const AdminDashboard = () => {
                           {customer.is_admin ? 'Admin' : 'Customer'}
                         </span>
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        {!customer.is_admin && (
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleDeleteCustomer(customer.id, false)}
+                              className="text-red-600 hover:text-red-900"
+                              title="Delete Customer Only"
+                            >
+                              <User className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteCustomer(customer.id, true)}
+                              className="text-red-700 hover:text-red-900"
+                              title="Delete Customer + Orders"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
