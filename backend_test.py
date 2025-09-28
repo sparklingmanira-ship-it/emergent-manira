@@ -724,7 +724,8 @@ class ManiraAPITester:
 
 def main():
     tester = ManiraAPITester()
-    return tester.run_all_tests()
+    # Run focused tests for the specific features mentioned in the review request
+    return tester.run_focused_tests()
 
 if __name__ == "__main__":
     sys.exit(main())
