@@ -802,6 +802,53 @@ async def delete_product(product_id: str, admin_user: User = Depends(get_admin_u
     
     return {"message": "Product deleted successfully"}
 
+# Order Management - Delete Orders
+@api_router.delete("/admin/orders/{order_id}")
+async def delete_order(order_id: str, admin_user: User = Depends(get_admin_user)):
+    """Delete a single order by ID"""
+    result = await db.orders.delete_one({"id": order_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    return {"message": "Order deleted successfully"}
+
+@api_router.delete("/admin/orders/bulk")
+async def delete_orders_bulk(order_ids: List[str], admin_user: User = Depends(get_admin_user)):
+    """Delete multiple orders by IDs"""
+    result = await db.orders.delete_many({"id": {"$in": order_ids}})
+    
+    return {
+        "message": f"{result.deleted_count} orders deleted successfully",
+        "deleted_count": result.deleted_count
+    }
+
+# Customer Management - Delete Customers
+@api_router.delete("/admin/customers/{user_id}")
+async def delete_customer(user_id: str, delete_orders: bool = False, admin_user: User = Depends(get_admin_user)):
+    """Delete a customer and optionally their orders"""
+    
+    if delete_orders:
+        # First delete all orders associated with this customer
+        orders_result = await db.orders.delete_many({"customer_id": user_id})
+        orders_deleted = orders_result.deleted_count
+    else:
+        orders_deleted = 0
+    
+    # Delete the customer
+    result = await db.users.delete_one({"id": user_id, "is_admin": False})  # Prevent accidental admin deletion
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Customer not found or cannot delete admin user")
+    
+    message = f"Customer deleted successfully"
+    if orders_deleted > 0:
+        message += f" along with {orders_deleted} associated orders"
+    
+    return {
+        "message": message,
+        "customer_deleted": True,
+        "orders_deleted": orders_deleted
+    }
+
 # Include the router in the main app
 app.include_router(api_router)
 
