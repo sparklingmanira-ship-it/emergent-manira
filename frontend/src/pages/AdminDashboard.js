@@ -356,6 +356,24 @@ const AdminDashboard = () => {
     }
   };
 
+  // Delete Customer Functions
+  const handleDeleteCustomer = async (customerId, deleteOrders = false) => {
+    const confirmMessage = deleteOrders 
+      ? 'Are you sure you want to delete this customer and ALL their orders? This action cannot be undone.'
+      : 'Are you sure you want to delete this customer? Their orders will remain in the system.';
+      
+    if (window.confirm(confirmMessage)) {
+      try {
+        await axios.delete(`${API}/admin/customers/${customerId}?delete_orders=${deleteOrders}`);
+        toast.success('Customer deleted successfully!');
+        fetchCustomers();
+      } catch (error) {
+        console.error('Error deleting customer:', error);
+        toast.error('Failed to delete customer');
+      }
+    }
+  };
+
   const handleAddPromotion = async (e) => {
     e.preventDefault();
     
