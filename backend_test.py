@@ -378,10 +378,6 @@ class ManiraAPITester:
 
         headers = {'Authorization': f'Bearer {self.admin_token}'}
         
-        # First, create some test orders to delete
-        # We need to create a user and some orders first
-        test_orders = []
-        
         # Get existing orders first
         success, orders_response = self.run_test(
             "Get Orders for Delete Test",
@@ -394,13 +390,17 @@ class ManiraAPITester:
         if not success:
             return False
         
-        if not orders_response:
+        initial_order_count = len(orders_response)
+        print(f"  📊 Found {initial_order_count} orders initially")
+        
+        if initial_order_count == 0:
             self.log_test("Orders Delete Test", False, "No orders available to test deletion")
             return False
         
         # Test individual order deletion
-        if len(orders_response) > 0:
+        if initial_order_count > 0:
             order_to_delete = orders_response[0]['id']
+            print(f"  🗑️ Deleting individual order: {order_to_delete}")
             
             success, _ = self.run_test(
                 "DELETE Individual Order",
@@ -430,19 +430,22 @@ class ManiraAPITester:
                 else:
                     self.log_test("Order Deletion Verification", True, "Order successfully removed from database")
         
-        # Test bulk order deletion if we have multiple orders
-        if len(orders_response) > 1:
-            # Get fresh list of orders
-            success, fresh_orders = self.run_test(
-                "Get Fresh Orders for Bulk Delete",
-                "GET",
-                "admin/orders",
-                200,
-                headers=headers
-            )
+        # Test bulk order deletion if we have multiple orders remaining
+        success, fresh_orders = self.run_test(
+            "Get Fresh Orders for Bulk Delete",
+            "GET",
+            "admin/orders",
+            200,
+            headers=headers
+        )
+        
+        if success:
+            remaining_count = len(fresh_orders)
+            print(f"  📊 Found {remaining_count} orders remaining for bulk test")
             
-            if success and len(fresh_orders) >= 2:
+            if remaining_count >= 2:
                 bulk_order_ids = [fresh_orders[0]['id'], fresh_orders[1]['id']]
+                print(f"  🗑️ Bulk deleting orders: {bulk_order_ids}")
                 
                 success, bulk_response = self.run_test(
                     "DELETE Bulk Orders",
@@ -454,6 +457,7 @@ class ManiraAPITester:
                 )
                 
                 if success:
+                    print(f"  ✅ Bulk delete response: {bulk_response}")
                     # Verify bulk deletion worked
                     success, final_orders = self.run_test(
                         "Verify Bulk Order Deletion",
@@ -470,6 +474,10 @@ class ManiraAPITester:
                             return False
                         else:
                             self.log_test("Bulk Order Deletion Verification", True, "All bulk orders successfully removed")
+                else:
+                    print(f"  ❌ Bulk delete failed")
+            else:
+                self.log_test("Bulk Orders Delete Test", False, f"Not enough orders remaining ({remaining_count}) for bulk test")
         
         # Test error handling - try to delete non-existent order
         fake_order_id = "non-existent-order-id"
