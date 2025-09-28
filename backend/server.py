@@ -772,7 +772,13 @@ async def get_settings(admin_user: User = Depends(get_admin_user)):
             "razorpay_secret_key": "",
             "email_notifications": True,
             "sms_notifications": True,
-            "inventory_alerts": False
+            "inventory_alerts": False,
+            "homepage_title": "Manira",
+            "homepage_subtitle": "Sparkle Beyond Time",
+            "homepage_description": "Discover exquisite AD (American Diamond) jewellery that brings unmatched sparkle and elegance to every collection. Crafted with meticulous attention to detail for your unique style.",
+            "homepage_banner_url": "",
+            "primary_button_text": "Shop Now",
+            "secondary_button_text": "Explore Collection"
         }
     # Remove MongoDB's _id field to avoid serialization issues
     if '_id' in settings:
