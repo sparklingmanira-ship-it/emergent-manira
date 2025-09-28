@@ -281,7 +281,7 @@ class ManiraAPITester:
             return False
 
         headers = {'Authorization': f'Bearer {self.admin_token}'}
-        success, _ = self.run_test(
+        success, response = self.run_test(
             "Get Admin Orders",
             "GET",
             "admin/orders",
@@ -289,7 +289,352 @@ class ManiraAPITester:
             headers=headers
         )
         
-        return success
+        return success, response
+
+    def test_settings_api(self):
+        """Test Settings API endpoints"""
+        if not self.admin_token:
+            self.log_test("Settings API Tests", False, "No admin token available")
+            return False
+
+        headers = {'Authorization': f'Bearer {self.admin_token}'}
+        
+        # Test GET settings
+        success, settings_response = self.run_test(
+            "GET Admin Settings",
+            "GET",
+            "admin/settings",
+            200,
+            headers=headers
+        )
+        
+        if not success:
+            return False
+        
+        # Verify settings structure and no ObjectId serialization errors
+        expected_fields = ['store_name', 'store_email', 'store_phone', 'store_address', 'currency']
+        for field in expected_fields:
+            if field not in settings_response:
+                self.log_test(f"Settings Field Check ({field})", False, f"Missing field: {field}")
+                return False
+        
+        self.log_test("Settings Structure Check", True, "All expected fields present")
+        
+        # Test PUT settings - update some settings
+        updated_settings = {
+            "store_name": "Updated Manira Jewellery",
+            "store_email": "updated@manira.com",
+            "store_phone": "+91 9999999999",
+            "store_address": "Updated Address, Mumbai",
+            "currency": "INR",
+            "free_shipping_threshold": 3000,
+            "standard_shipping_cost": 150
+        }
+        
+        success, _ = self.run_test(
+            "PUT Admin Settings",
+            "PUT",
+            "admin/settings",
+            200,
+            data=updated_settings,
+            headers=headers
+        )
+        
+        if not success:
+            return False
+        
+        # Verify settings persistence - GET again to check if changes were saved
+        success, updated_response = self.run_test(
+            "GET Updated Settings (Persistence Check)",
+            "GET",
+            "admin/settings",
+            200,
+            headers=headers
+        )
+        
+        if not success:
+            return False
+        
+        # Check if the updates were persisted
+        persistence_check = True
+        for key, value in updated_settings.items():
+            if updated_response.get(key) != value:
+                self.log_test(f"Settings Persistence ({key})", False, f"Expected: {value}, Got: {updated_response.get(key)}")
+                persistence_check = False
+        
+        if persistence_check:
+            self.log_test("Settings Persistence Check", True, "All settings persisted correctly")
+        
+        return persistence_check
+
+    def test_orders_delete_functionality(self):
+        """Test Orders Delete functionality"""
+        if not self.admin_token:
+            self.log_test("Orders Delete Tests", False, "No admin token available")
+            return False
+
+        headers = {'Authorization': f'Bearer {self.admin_token}'}
+        
+        # First, create some test orders to delete
+        # We need to create a user and some orders first
+        test_orders = []
+        
+        # Get existing orders first
+        success, orders_response = self.run_test(
+            "Get Orders for Delete Test",
+            "GET",
+            "admin/orders",
+            200,
+            headers=headers
+        )
+        
+        if not success:
+            return False
+        
+        if not orders_response:
+            self.log_test("Orders Delete Test", False, "No orders available to test deletion")
+            return False
+        
+        # Test individual order deletion
+        if len(orders_response) > 0:
+            order_to_delete = orders_response[0]['id']
+            
+            success, _ = self.run_test(
+                "DELETE Individual Order",
+                "DELETE",
+                f"admin/orders/{order_to_delete}",
+                200,
+                headers=headers
+            )
+            
+            if not success:
+                return False
+            
+            # Verify order was actually deleted
+            success, updated_orders = self.run_test(
+                "Verify Order Deletion",
+                "GET",
+                "admin/orders",
+                200,
+                headers=headers
+            )
+            
+            if success:
+                deleted_order_exists = any(order['id'] == order_to_delete for order in updated_orders)
+                if deleted_order_exists:
+                    self.log_test("Order Deletion Verification", False, "Order still exists after deletion")
+                    return False
+                else:
+                    self.log_test("Order Deletion Verification", True, "Order successfully removed from database")
+        
+        # Test bulk order deletion if we have multiple orders
+        if len(orders_response) > 1:
+            # Get fresh list of orders
+            success, fresh_orders = self.run_test(
+                "Get Fresh Orders for Bulk Delete",
+                "GET",
+                "admin/orders",
+                200,
+                headers=headers
+            )
+            
+            if success and len(fresh_orders) >= 2:
+                bulk_order_ids = [fresh_orders[0]['id'], fresh_orders[1]['id']]
+                
+                success, bulk_response = self.run_test(
+                    "DELETE Bulk Orders",
+                    "DELETE",
+                    "admin/orders/bulk",
+                    200,
+                    data=bulk_order_ids,
+                    headers=headers
+                )
+                
+                if success:
+                    # Verify bulk deletion worked
+                    success, final_orders = self.run_test(
+                        "Verify Bulk Order Deletion",
+                        "GET",
+                        "admin/orders",
+                        200,
+                        headers=headers
+                    )
+                    
+                    if success:
+                        remaining_deleted_orders = [order['id'] for order in final_orders if order['id'] in bulk_order_ids]
+                        if remaining_deleted_orders:
+                            self.log_test("Bulk Order Deletion Verification", False, f"Orders still exist: {remaining_deleted_orders}")
+                            return False
+                        else:
+                            self.log_test("Bulk Order Deletion Verification", True, "All bulk orders successfully removed")
+        
+        # Test error handling - try to delete non-existent order
+        fake_order_id = "non-existent-order-id"
+        success, _ = self.run_test(
+            "DELETE Non-existent Order (Error Handling)",
+            "DELETE",
+            f"admin/orders/{fake_order_id}",
+            404,
+            headers=headers
+        )
+        
+        return True
+
+    def test_customers_delete_functionality(self):
+        """Test Customers Delete functionality"""
+        if not self.admin_token:
+            self.log_test("Customers Delete Tests", False, "No admin token available")
+            return False
+
+        headers = {'Authorization': f'Bearer {self.admin_token}'}
+        
+        # Get existing customers
+        success, customers_response = self.run_test(
+            "Get Customers for Delete Test",
+            "GET",
+            "admin/customers",
+            200,
+            headers=headers
+        )
+        
+        if not success:
+            return False
+        
+        # Find non-admin customers for testing
+        non_admin_customers = [customer for customer in customers_response if not customer.get('is_admin', False)]
+        
+        if not non_admin_customers:
+            self.log_test("Customers Delete Test", False, "No non-admin customers available to test deletion")
+            return False
+        
+        # Test customer-only deletion (delete_orders=false)
+        if len(non_admin_customers) > 0:
+            customer_to_delete = non_admin_customers[0]['id']
+            
+            success, _ = self.run_test(
+                "DELETE Customer Only (delete_orders=false)",
+                "DELETE",
+                f"admin/customers/{customer_to_delete}?delete_orders=false",
+                200,
+                headers=headers
+            )
+            
+            if not success:
+                return False
+            
+            # Verify customer was deleted
+            success, updated_customers = self.run_test(
+                "Verify Customer Deletion",
+                "GET",
+                "admin/customers",
+                200,
+                headers=headers
+            )
+            
+            if success:
+                deleted_customer_exists = any(customer['id'] == customer_to_delete for customer in updated_customers)
+                if deleted_customer_exists:
+                    self.log_test("Customer Deletion Verification", False, "Customer still exists after deletion")
+                    return False
+                else:
+                    self.log_test("Customer Deletion Verification", True, "Customer successfully removed")
+        
+        # Test customer+orders deletion (delete_orders=true) if we have another customer
+        if len(non_admin_customers) > 1:
+            # Get fresh customer list
+            success, fresh_customers = self.run_test(
+                "Get Fresh Customers for Cascade Delete",
+                "GET",
+                "admin/customers",
+                200,
+                headers=headers
+            )
+            
+            if success:
+                fresh_non_admin = [customer for customer in fresh_customers if not customer.get('is_admin', False)]
+                if fresh_non_admin:
+                    customer_with_orders = fresh_non_admin[0]['id']
+                    
+                    success, cascade_response = self.run_test(
+                        "DELETE Customer with Orders (delete_orders=true)",
+                        "DELETE",
+                        f"admin/customers/{customer_with_orders}?delete_orders=true",
+                        200,
+                        headers=headers
+                    )
+                    
+                    if success:
+                        self.log_test("Customer Cascade Deletion", True, "Customer and orders deletion completed")
+        
+        # Test admin protection - try to delete admin user
+        admin_customers = [customer for customer in customers_response if customer.get('is_admin', False)]
+        if admin_customers:
+            admin_id = admin_customers[0]['id']
+            
+            success, _ = self.run_test(
+                "DELETE Admin User (Should Fail)",
+                "DELETE",
+                f"admin/customers/{admin_id}",
+                404,  # Should fail with 404 or 403
+                headers=headers
+            )
+            
+            # This test passes if it fails to delete admin
+            if success:
+                self.log_test("Admin Protection Test", True, "Admin user deletion properly blocked")
+        
+        # Test error handling - try to delete non-existent customer
+        fake_customer_id = "non-existent-customer-id"
+        success, _ = self.run_test(
+            "DELETE Non-existent Customer (Error Handling)",
+            "DELETE",
+            f"admin/customers/{fake_customer_id}",
+            404,
+            headers=headers
+        )
+        
+        return True
+
+    def test_authentication_failures(self):
+        """Test authentication failures for protected endpoints"""
+        # Test without token
+        success, _ = self.run_test(
+            "Settings Access Without Auth",
+            "GET",
+            "admin/settings",
+            401,
+            headers={}
+        )
+        
+        # Test with invalid token
+        invalid_headers = {'Authorization': 'Bearer invalid-token-here'}
+        success, _ = self.run_test(
+            "Settings Access With Invalid Token",
+            "GET",
+            "admin/settings",
+            401,
+            headers=invalid_headers
+        )
+        
+        # Test orders delete without auth
+        success, _ = self.run_test(
+            "Orders Delete Without Auth",
+            "DELETE",
+            "admin/orders/fake-id",
+            401,
+            headers={}
+        )
+        
+        # Test customers delete without auth
+        success, _ = self.run_test(
+            "Customers Delete Without Auth",
+            "DELETE",
+            "admin/customers/fake-id",
+            401,
+            headers={}
+        )
+        
+        return True
 
     def run_all_tests(self):
         """Run all API tests"""
