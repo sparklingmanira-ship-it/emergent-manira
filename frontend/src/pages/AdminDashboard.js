@@ -1092,6 +1092,8 @@ const AdminDashboard = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Razorpay Key ID</label>
                     <input
                       type="text"
+                      value={settings.razorpay_key_id}
+                      onChange={(e) => handleSettingsChange('razorpay_key_id', e.target.value)}
                       placeholder="Enter your Razorpay Key ID"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -1100,6 +1102,8 @@ const AdminDashboard = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Razorpay Secret Key</label>
                     <input
                       type="password"
+                      value={settings.razorpay_secret_key}
+                      onChange={(e) => handleSettingsChange('razorpay_secret_key', e.target.value)}
                       placeholder="Enter your Razorpay Secret Key"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
