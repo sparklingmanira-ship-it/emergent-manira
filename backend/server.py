@@ -829,7 +829,7 @@ async def delete_customer(user_id: str, delete_orders: bool = False, admin_user:
     
     if delete_orders:
         # First delete all orders associated with this customer
-        orders_result = await db.orders.delete_many({"customer_id": user_id})
+        orders_result = await db.orders.delete_many({"user_id": user_id})  # Fixed: use user_id instead of customer_id
         orders_deleted = orders_result.deleted_count
     else:
         orders_deleted = 0
