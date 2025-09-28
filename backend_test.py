@@ -683,6 +683,45 @@ class ManiraAPITester:
                     print(f"  - {result['test']}: {result['details']}")
             return 1
 
+    def run_focused_tests(self):
+        """Run focused tests for Settings, Orders Delete, and Customers Delete"""
+        print("🎯 Starting Focused API Tests for Settings & Delete Functionality...")
+        print(f"Testing against: {self.base_url}")
+        print("=" * 70)
+
+        # Test admin login first
+        admin_success = self.test_admin_login()
+        if not admin_success:
+            print("❌ Admin login failed - cannot proceed with admin tests")
+            return 1
+
+        print("\n🔧 Testing Settings API...")
+        self.test_settings_api()
+
+        print("\n🗑️ Testing Orders Delete Functionality...")
+        self.test_orders_delete_functionality()
+
+        print("\n👥 Testing Customers Delete Functionality...")
+        self.test_customers_delete_functionality()
+
+        print("\n🔒 Testing Authentication Failures...")
+        self.test_authentication_failures()
+
+        # Print results
+        print("\n" + "=" * 70)
+        print(f"📊 Focused Test Results: {self.tests_passed}/{self.tests_run} passed")
+        
+        if self.tests_passed == self.tests_run:
+            print("🎉 All focused tests passed!")
+            return 0
+        else:
+            print("❌ Some focused tests failed!")
+            print("\nFailed tests:")
+            for result in self.test_results:
+                if not result['success']:
+                    print(f"  - {result['test']}: {result['details']}")
+            return 1
+
 def main():
     tester = ManiraAPITester()
     return tester.run_all_tests()
