@@ -774,6 +774,9 @@ async def get_settings(admin_user: User = Depends(get_admin_user)):
             "sms_notifications": True,
             "inventory_alerts": False
         }
+    # Remove MongoDB's _id field to avoid serialization issues
+    if '_id' in settings:
+        del settings['_id']
     return settings
 
 @api_router.put("/admin/settings")
