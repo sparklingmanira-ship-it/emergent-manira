@@ -9,9 +9,18 @@ const API = `${BACKEND_URL}/api`;
 const Homepage = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState({
+    homepage_title: 'Manira',
+    homepage_subtitle: 'Sparkle Beyond Time',
+    homepage_description: 'Discover exquisite AD (American Diamond) jewellery that brings unmatched sparkle and elegance to every collection. Crafted with meticulous attention to detail for your unique style.',
+    homepage_banner_url: '',
+    primary_button_text: 'Shop Now',
+    secondary_button_text: 'Explore Collection'
+  });
 
   useEffect(() => {
     fetchFeaturedProducts();
+    fetchSettings();
   }, []);
 
   const fetchFeaturedProducts = async () => {
@@ -22,6 +31,19 @@ const Homepage = () => {
       console.error('Error fetching featured products:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSettings = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/settings`);
+      setSettings(prevSettings => ({
+        ...prevSettings,
+        ...response.data
+      }));
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      // Continue with default settings if fetch fails
     }
   };
 
