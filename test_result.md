@@ -159,6 +159,18 @@ backend:
           agent: "testing"
           comment: "TESTED: Customer delete functionality fully working. Fixed bug where endpoint was looking for 'customer_id' instead of 'user_id' in orders collection. DELETE /api/admin/customers/{user_id} works for customer-only deletion (delete_orders=false). DELETE /api/admin/customers/{user_id}?delete_orders=true properly cascades to delete associated orders. Admin users cannot be deleted (proper protection). Proper error handling for non-existent customers (404)."
 
+  - task: "Add homepage customization settings to backend defaults"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "Added homepage_title, homepage_subtitle, homepage_description, homepage_banner_url, primary_button_text, secondary_button_text to default settings"
+
 frontend:
   - task: "Fix Settings tab to fetch and display backend settings"
     implemented: true
