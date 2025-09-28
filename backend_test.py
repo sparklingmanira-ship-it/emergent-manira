@@ -499,7 +499,50 @@ class ManiraAPITester:
 
         headers = {'Authorization': f'Bearer {self.admin_token}'}
         
-        # Get existing customers
+        # First, create a test user for deletion testing
+        test_user_data = {
+            "full_name": "Test Customer for Deletion",
+            "email": f"delete_test_{datetime.now().strftime('%H%M%S')}@test.com",
+            "phone": "9876543210",
+            "address": "123 Test Address for Deletion",
+            "password": "testpass123"
+        }
+        
+        success, reg_response = self.run_test(
+            "Create Test Customer for Deletion",
+            "POST",
+            "auth/register",
+            200,
+            data=test_user_data
+        )
+        
+        if not success:
+            self.log_test("Customers Delete Test", False, "Could not create test customer")
+            return False
+        
+        test_customer_id = reg_response['user']['id']
+        print(f"  👤 Created test customer: {test_customer_id}")
+        
+        # Create another test user for cascade deletion test
+        test_user_data2 = {
+            "full_name": "Test Customer 2 for Cascade Deletion",
+            "email": f"cascade_test_{datetime.now().strftime('%H%M%S')}@test.com",
+            "phone": "9876543211",
+            "address": "456 Test Address for Cascade",
+            "password": "testpass123"
+        }
+        
+        success, reg_response2 = self.run_test(
+            "Create Test Customer 2 for Cascade Deletion",
+            "POST",
+            "auth/register",
+            200,
+            data=test_user_data2
+        )
+        
+        test_customer_id2 = reg_response2['user']['id'] if success else None
+        
+        # Get existing customers to verify our test customers are there
         success, customers_response = self.run_test(
             "Get Customers for Delete Test",
             "GET",
@@ -511,71 +554,47 @@ class ManiraAPITester:
         if not success:
             return False
         
-        # Find non-admin customers for testing
-        non_admin_customers = [customer for customer in customers_response if not customer.get('is_admin', False)]
+        # Test customer-only deletion (delete_orders=false)
+        success, _ = self.run_test(
+            "DELETE Customer Only (delete_orders=false)",
+            "DELETE",
+            f"admin/customers/{test_customer_id}?delete_orders=false",
+            200,
+            headers=headers
+        )
         
-        if not non_admin_customers:
-            self.log_test("Customers Delete Test", False, "No non-admin customers available to test deletion")
+        if not success:
             return False
         
-        # Test customer-only deletion (delete_orders=false)
-        if len(non_admin_customers) > 0:
-            customer_to_delete = non_admin_customers[0]['id']
-            
-            success, _ = self.run_test(
-                "DELETE Customer Only (delete_orders=false)",
-                "DELETE",
-                f"admin/customers/{customer_to_delete}?delete_orders=false",
-                200,
-                headers=headers
-            )
-            
-            if not success:
+        # Verify customer was deleted
+        success, updated_customers = self.run_test(
+            "Verify Customer Deletion",
+            "GET",
+            "admin/customers",
+            200,
+            headers=headers
+        )
+        
+        if success:
+            deleted_customer_exists = any(customer['id'] == test_customer_id for customer in updated_customers)
+            if deleted_customer_exists:
+                self.log_test("Customer Deletion Verification", False, "Customer still exists after deletion")
                 return False
-            
-            # Verify customer was deleted
-            success, updated_customers = self.run_test(
-                "Verify Customer Deletion",
-                "GET",
-                "admin/customers",
-                200,
-                headers=headers
-            )
-            
-            if success:
-                deleted_customer_exists = any(customer['id'] == customer_to_delete for customer in updated_customers)
-                if deleted_customer_exists:
-                    self.log_test("Customer Deletion Verification", False, "Customer still exists after deletion")
-                    return False
-                else:
-                    self.log_test("Customer Deletion Verification", True, "Customer successfully removed")
+            else:
+                self.log_test("Customer Deletion Verification", True, "Customer successfully removed")
         
         # Test customer+orders deletion (delete_orders=true) if we have another customer
-        if len(non_admin_customers) > 1:
-            # Get fresh customer list
-            success, fresh_customers = self.run_test(
-                "Get Fresh Customers for Cascade Delete",
-                "GET",
-                "admin/customers",
+        if test_customer_id2:
+            success, cascade_response = self.run_test(
+                "DELETE Customer with Orders (delete_orders=true)",
+                "DELETE",
+                f"admin/customers/{test_customer_id2}?delete_orders=true",
                 200,
                 headers=headers
             )
             
             if success:
-                fresh_non_admin = [customer for customer in fresh_customers if not customer.get('is_admin', False)]
-                if fresh_non_admin:
-                    customer_with_orders = fresh_non_admin[0]['id']
-                    
-                    success, cascade_response = self.run_test(
-                        "DELETE Customer with Orders (delete_orders=true)",
-                        "DELETE",
-                        f"admin/customers/{customer_with_orders}?delete_orders=true",
-                        200,
-                        headers=headers
-                    )
-                    
-                    if success:
-                        self.log_test("Customer Cascade Deletion", True, "Customer and orders deletion completed")
+                self.log_test("Customer Cascade Deletion", True, "Customer and orders deletion completed")
         
         # Test admin protection - try to delete admin user
         admin_customers = [customer for customer in customers_response if customer.get('is_admin', False)]
