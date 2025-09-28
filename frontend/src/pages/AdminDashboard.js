@@ -279,6 +279,83 @@ const AdminDashboard = () => {
     }
   };
 
+  // Delete Orders Functions
+  const handleDeleteOrder = async (orderId) => {
+    if (window.confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+      try {
+        await axios.delete(`${API}/admin/orders/${orderId}`);
+        toast.success('Order deleted successfully!');
+        fetchOrders();
+        setSelectedOrders(selectedOrders.filter(id => id !== orderId));
+      } catch (error) {
+        console.error('Error deleting order:', error);
+        toast.error('Failed to delete order');
+      }
+    }
+  };
+
+  const handleBulkDeleteOrders = async () => {
+    if (selectedOrders.length === 0) {
+      toast.error('Please select orders to delete');
+      return;
+    }
+    
+    if (window.confirm(`Are you sure you want to delete ${selectedOrders.length} selected orders? This action cannot be undone.`)) {
+      try {
+        await axios.delete(`${API}/admin/orders/bulk`, {
+          data: selectedOrders
+        });
+        toast.success(`${selectedOrders.length} orders deleted successfully!`);
+        fetchOrders();
+        setSelectedOrders([]);
+        setShowBulkDelete(false);
+      } catch (error) {
+        console.error('Error deleting orders:', error);
+        toast.error('Failed to delete orders');
+      }
+    }
+  };
+
+  const handleOrderSelection = (orderId) => {
+    setSelectedOrders(prev => 
+      prev.includes(orderId) 
+        ? prev.filter(id => id !== orderId)
+        : [...prev, orderId]
+    );
+  };
+
+  const handleSelectAllOrders = () => {
+    const filteredOrders = orders.filter(order => {
+      // Apply same filters as display
+      if (orderStatusFilter !== 'all' && order.status !== orderStatusFilter) return false;
+      if (orderDateFilter !== 'all') {
+        const orderDate = new Date(order.created_at);
+        const now = new Date();
+        
+        switch (orderDateFilter) {
+          case 'today':
+            return orderDate.toDateString() === now.toDateString();
+          case 'week':
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            return orderDate >= weekAgo;
+          case 'month':
+            return orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear();
+          default:
+            return true;
+        }
+      }
+      return true;
+    });
+
+    const filteredOrderIds = filteredOrders.map(order => order.id);
+    
+    if (selectedOrders.length === filteredOrderIds.length) {
+      setSelectedOrders([]);
+    } else {
+      setSelectedOrders(filteredOrderIds);
+    }
+  };
+
   const handleAddPromotion = async (e) => {
     e.preventDefault();
     
