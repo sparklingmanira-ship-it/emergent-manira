@@ -77,6 +77,8 @@ const AdminDashboard = () => {
       fetchCustomers();
     } else if (activeTab === 'promotions') {
       fetchPromotions();
+    } else if (activeTab === 'settings') {
+      fetchSettings();
     }
   }, [activeTab]);
 
