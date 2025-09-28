@@ -74,7 +74,17 @@ const Homepage = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 to-slate-100/80"></div>
+        {settings.homepage_banner_url && (
+          <div className="absolute inset-0">
+            <img 
+              src={settings.homepage_banner_url}
+              alt="Homepage Banner"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/30"></div>
+          </div>
+        )}
+        <div className={`absolute inset-0 ${settings.homepage_banner_url ? '' : 'bg-gradient-to-br from-blue-50/80 to-slate-100/80'}`}></div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="fade-in-up">
             <div className="flex items-center justify-center mb-6">
@@ -83,27 +93,26 @@ const Homepage = () => {
                 alt="Manira Logo" 
                 className="h-20 w-20 object-contain mr-4"
               />
-              <h1 className="text-6xl md:text-8xl font-playfair font-bold text-gradient">
-                Manira
+              <h1 className={`text-6xl md:text-8xl font-playfair font-bold ${settings.homepage_banner_url ? 'text-white' : 'text-gradient'}`}>
+                {settings.homepage_title}
               </h1>
             </div>
             
-            <p className="text-2xl md:text-3xl font-playfair text-gray-600 mb-4">
-              Sparkle Beyond Time
+            <p className={`text-2xl md:text-3xl font-playfair mb-4 ${settings.homepage_banner_url ? 'text-white' : 'text-gray-600'}`}>
+              {settings.homepage_subtitle}
             </p>
             
-            <p className="text-lg md:text-xl text-gray-500 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Discover exquisite AD (American Diamond) jewellery that brings unmatched sparkle and elegance to every collection. 
-              Crafted with meticulous attention to detail for your unique style.
+            <p className={`text-lg md:text-xl mb-8 max-w-3xl mx-auto leading-relaxed ${settings.homepage_banner_url ? 'text-gray-200' : 'text-gray-500'}`}>
+              {settings.homepage_description}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link to="/products" className="manira-btn-primary text-lg px-8 py-4">
                 <ShoppingBag className="mr-2 h-5 w-5" />
-                Shop Now
+                {settings.primary_button_text}
               </Link>
               <Link to="/products" className="manira-btn-secondary text-lg px-8 py-4">
-                Explore Collection
+                {settings.secondary_button_text}
               </Link>
             </div>
           </div>
