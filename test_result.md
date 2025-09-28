@@ -111,7 +111,7 @@ backend:
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main"
@@ -119,14 +119,17 @@ backend:
         - working: true
           agent: "main"
           comment: "Fixed MongoDB ObjectId serialization issue by removing _id field before return. Settings now load properly"
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Settings API fully functional. GET /api/admin/settings returns proper data without ObjectId serialization errors. PUT /api/admin/settings saves and retrieves settings properly. Settings persistence verified between requests. All expected fields present and updates are correctly persisted."
   
   - task: "Add delete orders endpoint"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
@@ -134,14 +137,17 @@ backend:
         - working: "NA"
           agent: "main"
           comment: "Implemented DELETE /admin/orders/{id} and DELETE /admin/orders/bulk endpoints with proper validation"
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Orders delete functionality fully working. Fixed route ordering issue (bulk route must come before parameterized route). Individual DELETE /api/admin/orders/{order_id} works correctly. Bulk DELETE /api/admin/orders/bulk accepts {order_ids: []} format and deletes multiple orders. Proper error handling for non-existent orders (404). Orders are actually removed from database as verified."
 
   - task: "Add delete customers endpoint" 
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
@@ -149,6 +155,9 @@ backend:
         - working: "NA"
           agent: "main"
           comment: "Implemented DELETE /admin/customers/{id} with delete_orders parameter for cascading delete"
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Customer delete functionality fully working. Fixed bug where endpoint was looking for 'customer_id' instead of 'user_id' in orders collection. DELETE /api/admin/customers/{user_id} works for customer-only deletion (delete_orders=false). DELETE /api/admin/customers/{user_id}?delete_orders=true properly cascades to delete associated orders. Admin users cannot be deleted (proper protection). Proper error handling for non-existent customers (404)."
 
 frontend:
   - task: "Fix Settings tab to fetch and display backend settings"
@@ -199,15 +208,14 @@ frontend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 1
+  test_sequence: 2
   run_ui: false
 
 test_plan:
   current_focus:
-    - "Fix Settings API endpoint persistence"
     - "Fix Settings tab to fetch and display backend settings"
-    - "Add delete orders endpoint"
-    - "Add delete customers endpoint"
+    - "Add delete buttons for orders with individual and bulk options"
+    - "Add delete buttons for customers with option selection"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -215,3 +223,5 @@ test_plan:
 agent_communication:
     - agent: "main"
       message: "Starting implementation of settings persistence fix and delete functionality. Will fix settings first, then add delete endpoints and UI components."
+    - agent: "testing"
+      message: "BACKEND TESTING COMPLETE: All backend functionality is working perfectly. Settings API persistence is fixed and working. Orders delete (individual and bulk) is fully functional after fixing route ordering issue. Customers delete with cascade option is working after fixing user_id field bug. All endpoints require proper admin authentication. Error handling is correct for non-existent resources. Ready for frontend testing."
