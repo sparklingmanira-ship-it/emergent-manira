@@ -101,3 +101,99 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Fix Settings persistence issue where backend has hardcoded values and Add delete functionality for test Orders and Customer profiles with individual and bulk options"
+
+backend:
+  - task: "Fix Settings API endpoint persistence"
+    implemented: false
+    working: false
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Settings endpoint exists but frontend doesn't fetch settings on load, causing hardcoded values"
+  
+  - task: "Add delete orders endpoint"
+    implemented: false
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Need to implement individual and bulk delete endpoints for orders"
+
+  - task: "Add delete customers endpoint" 
+    implemented: false
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Need to implement delete customer with option to delete associated orders"
+
+frontend:
+  - task: "Fix Settings tab to fetch and display backend settings"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/pages/AdminDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Frontend has hardcoded settings values, missing fetchSettings function and useEffect integration"
+
+  - task: "Add delete buttons for orders with individual and bulk options"
+    implemented: false
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Need to add delete UI for orders in admin dashboard"
+
+  - task: "Add delete buttons for customers with option selection"
+    implemented: false
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Need to add delete UI for customers with choice of delete customer only or with orders"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Fix Settings API endpoint persistence"
+    - "Fix Settings tab to fetch and display backend settings"
+    - "Add delete orders endpoint"
+    - "Add delete customers endpoint"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+    - agent: "main"
+      message: "Starting implementation of settings persistence fix and delete functionality. Will fix settings first, then add delete endpoints and UI components."
