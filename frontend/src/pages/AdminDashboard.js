@@ -1228,15 +1228,27 @@ const AdminDashboard = () => {
                 return true;
               })
               .map((order) => (
-              <div key={order.id} className="bg-white rounded-2xl shadow-lg p-6">
+              <div key={order.id} className={`bg-white rounded-2xl shadow-lg p-6 ${
+                showBulkDelete && selectedOrders.includes(order.id) ? 'ring-2 ring-red-500' : ''
+              }`}>
                 <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Order #{order.id.slice(-8).toUpperCase()}
-                    </h3>
-                    <p className="text-gray-600">
-                      {new Date(order.created_at).toLocaleDateString()}
-                    </p>
+                  <div className="flex items-start gap-3">
+                    {showBulkDelete && (
+                      <input
+                        type="checkbox"
+                        checked={selectedOrders.includes(order.id)}
+                        onChange={() => handleOrderSelection(order.id)}
+                        className="mt-1 h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                      />
+                    )}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Order #{order.id.slice(-8).toUpperCase()}
+                      </h3>
+                      <p className="text-gray-600">
+                        {new Date(order.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
                   <div className="text-right">
                     <div className="space-y-1">
