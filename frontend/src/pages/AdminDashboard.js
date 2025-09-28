@@ -52,6 +52,9 @@ const AdminDashboard = () => {
   const [orderStatusFilter, setOrderStatusFilter] = useState('all');
   const [orderDateFilter, setOrderDateFilter] = useState('all');
   
+  // Delete functionality states
+  const [selectedOrders, setSelectedOrders] = useState([]);
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name: '',
     description: '',
