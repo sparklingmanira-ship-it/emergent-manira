@@ -166,7 +166,7 @@ frontend:
     file: "/app/frontend/src/pages/AdminDashboard.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main"
@@ -174,6 +174,9 @@ frontend:
         - working: true
           agent: "main"
           comment: "Added fetchSettings function and integrated into useEffect for settings tab. Settings now load from backend properly"
+        - working: true
+          agent: "main"
+          comment: "VERIFIED: All settings fields now properly connected to backend state. Fixed all hardcoded defaultValue/defaultChecked fields to use value/checked with handleSettingsChange. Settings load and save correctly."
 
   - task: "Add delete buttons for orders with individual and bulk options"
     implemented: true
@@ -204,6 +207,30 @@ frontend:
         - working: "NA"
           agent: "main"
           comment: "Added Actions column to customers table with two delete buttons - customer only and customer+orders"
+
+  - task: "Add homepage customization controls in admin settings"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/AdminDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "Added Homepage Customization section with fields for title, subtitle, description, banner image URL, and button texts"
+
+  - task: "Make homepage use dynamic settings from backend"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/Homepage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "Modified homepage to fetch settings from backend and display dynamic content including banner image overlay support"
 
 metadata:
   created_by: "main_agent"
