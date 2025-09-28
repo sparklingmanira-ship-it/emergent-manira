@@ -1149,6 +1149,52 @@ const AdminDashboard = () => {
                     <Download className="h-4 w-4 mr-2" />
                     Export to Excel
                   </button>
+
+                  {/* Bulk Delete Controls */}
+                  <button
+                    onClick={() => setShowBulkDelete(!showBulkDelete)}
+                    className={`flex items-center text-sm px-4 py-2 rounded-lg border ${showBulkDelete 
+                      ? 'bg-red-50 border-red-300 text-red-700' 
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    {showBulkDelete ? 'Cancel Delete' : 'Bulk Delete'}
+                  </button>
+
+                  {showBulkDelete && (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleSelectAllOrders}
+                        className="text-sm px-3 py-1 border border-gray-300 rounded text-gray-600 hover:bg-gray-50"
+                      >
+                        {selectedOrders.length === orders.filter(order => {
+                          if (orderStatusFilter !== 'all' && order.status !== orderStatusFilter) return false;
+                          if (orderDateFilter !== 'all') {
+                            const orderDate = new Date(order.created_at);
+                            const now = new Date();
+                            switch (orderDateFilter) {
+                              case 'today': return orderDate.toDateString() === now.toDateString();
+                              case 'week': return orderDate >= new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                              case 'month': return orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear();
+                              default: return true;
+                            }
+                          }
+                          return true;
+                        }).length ? 'Deselect All' : 'Select All'}
+                      </button>
+                      <span className="text-sm text-gray-600">
+                        {selectedOrders.length} selected
+                      </span>
+                      {selectedOrders.length > 0 && (
+                        <button
+                          onClick={handleBulkDeleteOrders}
+                          className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                        >
+                          Delete Selected
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
