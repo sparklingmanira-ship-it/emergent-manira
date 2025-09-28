@@ -803,15 +803,6 @@ async def delete_product(product_id: str, admin_user: User = Depends(get_admin_u
     return {"message": "Product deleted successfully"}
 
 # Order Management - Delete Orders
-@api_router.delete("/admin/orders/{order_id}")
-async def delete_order(order_id: str, admin_user: User = Depends(get_admin_user)):
-    """Delete a single order by ID"""
-    result = await db.orders.delete_one({"id": order_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Order not found")
-    
-    return {"message": "Order deleted successfully"}
-
 class BulkDeleteRequest(BaseModel):
     order_ids: List[str]
 
@@ -824,6 +815,15 @@ async def delete_orders_bulk(request: BulkDeleteRequest, admin_user: User = Depe
         "message": f"{result.deleted_count} orders deleted successfully",
         "deleted_count": result.deleted_count
     }
+
+@api_router.delete("/admin/orders/{order_id}")
+async def delete_order(order_id: str, admin_user: User = Depends(get_admin_user)):
+    """Delete a single order by ID"""
+    result = await db.orders.delete_one({"id": order_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    return {"message": "Order deleted successfully"}
 
 # Customer Management - Delete Customers
 @api_router.delete("/admin/customers/{user_id}")
