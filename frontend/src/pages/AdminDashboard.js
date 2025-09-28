@@ -1067,7 +1067,8 @@ const AdminDashboard = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Free Shipping Threshold</label>
                     <input
                       type="number"
-                      defaultValue="2000"
+                      value={settings.free_shipping_threshold}
+                      onChange={(e) => handleSettingsChange('free_shipping_threshold', parseFloat(e.target.value))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
@@ -1075,7 +1076,8 @@ const AdminDashboard = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Standard Shipping Cost</label>
                     <input
                       type="number"
-                      defaultValue="100"
+                      value={settings.standard_shipping_cost}
+                      onChange={(e) => handleSettingsChange('standard_shipping_cost', parseFloat(e.target.value))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
