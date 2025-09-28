@@ -45,7 +45,13 @@ const AdminDashboard = () => {
     razorpay_secret_key: '',
     email_notifications: true,
     sms_notifications: true,
-    inventory_alerts: false
+    inventory_alerts: false,
+    homepage_title: 'Manira',
+    homepage_subtitle: 'Sparkle Beyond Time',
+    homepage_description: 'Discover exquisite AD (American Diamond) jewellery that brings unmatched sparkle and elegance to every collection. Crafted with meticulous attention to detail for your unique style.',
+    homepage_banner_url: '',
+    primary_button_text: 'Shop Now',
+    secondary_button_text: 'Explore Collection'
   });
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [partialNotes, setPartialNotes] = useState('');
