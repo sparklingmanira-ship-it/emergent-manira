@@ -55,25 +55,26 @@ const Homepage = () => {
     }
   };
 
+  // Dynamic categories from settings
   const categories = [
     { 
-      name: 'Necklaces', 
-      image: 'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwxfHxkaWFtb25kJTIwamV3ZWxsZXJ5fGVufDB8fHx8MTc1ODg1NDIyMnww&ixlib=rb-4.1.0&q=85',
+      name: settings.category_necklaces_name || 'Necklaces', 
+      image: settings.category_necklaces_image || 'https://images.unsplash.com/photo-1611652022419-a9419f74343d',
       category: 'necklaces' 
     },
     { 
-      name: 'Rings', 
-      image: 'https://images.unsplash.com/photo-1607703829739-c05b7beddf60?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwyfHxkaWFtb25kJTIwamV3ZWxsZXJ5fGVufDB8fHx8MTc1ODg1NDIyMnww&ixlib=rb-4.1.0&q=85',
+      name: settings.category_rings_name || 'Rings', 
+      image: settings.category_rings_image || 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9',
       category: 'rings' 
     },
     { 
-      name: 'Earrings', 
-      image: 'https://images.unsplash.com/photo-1693213085235-ea6deadf8cee?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHw0fHxkaWFtb25kJTIwamV3ZWxsZXJ5fGVufDB8fHx8MTc1ODg1NDIyMnww&ixlib=rb-4.1.0&q=85',
+      name: settings.category_earrings_name || 'Earrings', 
+      image: settings.category_earrings_image || 'https://images.unsplash.com/photo-1693212793204-bcea856c75fe',
       category: 'earrings' 
     },
     { 
-      name: 'Bracelets', 
-      image: 'https://images.unsplash.com/photo-1684439673104-f5d22791c71a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwamV3ZWxsZXJ5fGVufDB8fHx8MTc1ODg1NDIyOHww&ixlib=rb-4.1.0&q=85',
+      name: settings.category_bracelets_name || 'Bracelets', 
+      image: settings.category_bracelets_image || 'https://images.unsplash.com/photo-1633810543462-77c4a3b13f07',
       category: 'bracelets' 
     }
   ];
