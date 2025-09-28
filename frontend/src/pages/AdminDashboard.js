@@ -336,6 +336,16 @@ const AdminDashboard = () => {
     setShowAddPromotion(true);
   };
 
+  const fetchSettings = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/settings`);
+      setSettings(response.data);
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      toast.error('Failed to load settings');
+    }
+  };
+
   const handleSettingsChange = (field, value) => {
     setSettings(prev => ({
       ...prev,
