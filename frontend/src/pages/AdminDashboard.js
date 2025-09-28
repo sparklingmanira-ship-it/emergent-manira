@@ -1219,6 +1219,112 @@ const AdminDashboard = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Homepage Categories Management */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Homepage Categories</h3>
+                <div className="space-y-6">
+                  {/* Necklaces Category */}
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <h4 className="font-medium text-gray-900 mb-3">Necklaces Category</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Display Name</label>
+                        <input
+                          type="text"
+                          value={settings.category_necklaces_name || 'Necklaces'}
+                          onChange={(e) => handleSettingsChange('category_necklaces_name', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
+                        <input
+                          type="url"
+                          value={settings.category_necklaces_image || 'https://images.unsplash.com/photo-1611652022419-a9419f74343d'}
+                          onChange={(e) => handleSettingsChange('category_necklaces_image', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Rings Category */}
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <h4 className="font-medium text-gray-900 mb-3">Rings Category</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Display Name</label>
+                        <input
+                          type="text"
+                          value={settings.category_rings_name || 'Rings'}
+                          onChange={(e) => handleSettingsChange('category_rings_name', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
+                        <input
+                          type="url"
+                          value={settings.category_rings_image || 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9'}
+                          onChange={(e) => handleSettingsChange('category_rings_image', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Earrings Category */}
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <h4 className="font-medium text-gray-900 mb-3">Earrings Category</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Display Name</label>
+                        <input
+                          type="text"
+                          value={settings.category_earrings_name || 'Earrings'}
+                          onChange={(e) => handleSettingsChange('category_earrings_name', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
+                        <input
+                          type="url"
+                          value={settings.category_earrings_image || 'https://images.unsplash.com/photo-1693212793204-bcea856c75fe'}
+                          onChange={(e) => handleSettingsChange('category_earrings_image', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bracelets Category */}
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <h4 className="font-medium text-gray-900 mb-3">Bracelets Category</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Display Name</label>
+                        <input
+                          type="text"
+                          value={settings.category_bracelets_name || 'Bracelets'}
+                          onChange={(e) => handleSettingsChange('category_bracelets_name', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
+                        <input
+                          type="url"
+                          value={settings.category_bracelets_image || 'https://images.unsplash.com/photo-1633810543462-77c4a3b13f07'}
+                          onChange={(e) => handleSettingsChange('category_bracelets_image', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="mt-8 pt-6 border-t border-gray-200">
