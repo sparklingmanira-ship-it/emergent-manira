@@ -106,8 +106,8 @@ user_problem_statement: "Fix Settings persistence issue where backend has hardco
 
 backend:
   - task: "Fix Settings API endpoint persistence"
-    implemented: false
-    working: false
+    implemented: true
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
@@ -116,9 +116,12 @@ backend:
         - working: false
           agent: "main"
           comment: "Settings endpoint exists but frontend doesn't fetch settings on load, causing hardcoded values"
+        - working: true
+          agent: "main"
+          comment: "Fixed MongoDB ObjectId serialization issue by removing _id field before return. Settings now load properly"
   
   - task: "Add delete orders endpoint"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "/app/backend/server.py"
     stuck_count: 0
@@ -128,9 +131,12 @@ backend:
         - working: "NA"
           agent: "main"
           comment: "Need to implement individual and bulk delete endpoints for orders"
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented DELETE /admin/orders/{id} and DELETE /admin/orders/bulk endpoints with proper validation"
 
   - task: "Add delete customers endpoint" 
-    implemented: false
+    implemented: true
     working: "NA"
     file: "/app/backend/server.py"
     stuck_count: 0
@@ -140,6 +146,9 @@ backend:
         - working: "NA"
           agent: "main"
           comment: "Need to implement delete customer with option to delete associated orders"
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented DELETE /admin/customers/{id} with delete_orders parameter for cascading delete"
 
 frontend:
   - task: "Fix Settings tab to fetch and display backend settings"
