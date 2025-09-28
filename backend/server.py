@@ -778,7 +778,15 @@ async def get_settings(admin_user: User = Depends(get_admin_user)):
             "homepage_description": "Discover exquisite AD (American Diamond) jewellery that brings unmatched sparkle and elegance to every collection. Crafted with meticulous attention to detail for your unique style.",
             "homepage_banner_url": "",
             "primary_button_text": "Shop Now",
-            "secondary_button_text": "Explore Collection"
+            "secondary_button_text": "Explore Collection",
+            "category_necklaces_name": "Necklaces",
+            "category_necklaces_image": "https://images.unsplash.com/photo-1611652022419-a9419f74343d",
+            "category_rings_name": "Rings", 
+            "category_rings_image": "https://images.unsplash.com/photo-1603561591411-07134e71a2a9",
+            "category_earrings_name": "Earrings",
+            "category_earrings_image": "https://images.unsplash.com/photo-1693212793204-bcea856c75fe",
+            "category_bracelets_name": "Bracelets",
+            "category_bracelets_image": "https://images.unsplash.com/photo-1633810543462-77c4a3b13f07"
         }
     # Remove MongoDB's _id field to avoid serialization issues
     if '_id' in settings:
