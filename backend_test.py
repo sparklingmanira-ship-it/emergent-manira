@@ -605,7 +605,7 @@ class ManiraAPITester:
             "Settings Access Without Auth",
             "GET",
             "admin/settings",
-            401,
+            403,  # FastAPI returns 403 for missing auth
             headers={}
         )
         
@@ -624,7 +624,7 @@ class ManiraAPITester:
             "Orders Delete Without Auth",
             "DELETE",
             "admin/orders/fake-id",
-            401,
+            403,  # FastAPI returns 403 for missing auth
             headers={}
         )
         
@@ -633,7 +633,7 @@ class ManiraAPITester:
             "Customers Delete Without Auth",
             "DELETE",
             "admin/customers/fake-id",
-            401,
+            403,  # FastAPI returns 403 for missing auth
             headers={}
         )
         
