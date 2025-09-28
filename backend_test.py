@@ -449,7 +449,7 @@ class ManiraAPITester:
                     "DELETE",
                     "admin/orders/bulk",
                     200,
-                    data=bulk_order_ids,
+                    data={"order_ids": bulk_order_ids},
                     headers=headers
                 )
                 
