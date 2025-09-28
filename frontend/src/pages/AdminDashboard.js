@@ -1144,6 +1144,75 @@ const AdminDashboard = () => {
                   </label>
                 </div>
               </div>
+
+              {/* Homepage Customization Settings */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Homepage Customization</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Homepage Title</label>
+                    <input
+                      type="text"
+                      value={settings.homepage_title || 'Manira'}
+                      onChange={(e) => handleSettingsChange('homepage_title', e.target.value)}
+                      placeholder="e.g., Manira"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Homepage Subtitle</label>
+                    <input
+                      type="text"
+                      value={settings.homepage_subtitle || 'Sparkle Beyond Time'}
+                      onChange={(e) => handleSettingsChange('homepage_subtitle', e.target.value)}
+                      placeholder="e.g., Sparkle Beyond Time"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Homepage Description</label>
+                    <textarea
+                      rows={3}
+                      value={settings.homepage_description || 'Discover exquisite AD (American Diamond) jewellery that brings unmatched sparkle and elegance to every collection. Crafted with meticulous attention to detail for your unique style.'}
+                      onChange={(e) => handleSettingsChange('homepage_description', e.target.value)}
+                      placeholder="Describe your brand and products..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Homepage Banner Image URL</label>
+                    <input
+                      type="url"
+                      value={settings.homepage_banner_url || ''}
+                      onChange={(e) => handleSettingsChange('homepage_banner_url', e.target.value)}
+                      placeholder="https://example.com/banner-image.jpg"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Primary Button Text</label>
+                      <input
+                        type="text"
+                        value={settings.primary_button_text || 'Shop Now'}
+                        onChange={(e) => handleSettingsChange('primary_button_text', e.target.value)}
+                        placeholder="e.g., Shop Now"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Secondary Button Text</label>
+                      <input
+                        type="text"
+                        value={settings.secondary_button_text || 'Explore Collection'}
+                        onChange={(e) => handleSettingsChange('secondary_button_text', e.target.value)}
+                        placeholder="e.g., Explore Collection"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="mt-8 pt-6 border-t border-gray-200">
