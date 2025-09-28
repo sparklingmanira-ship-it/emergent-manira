@@ -1270,9 +1270,18 @@ const AdminDashboard = () => {
                         </p>
                       )}
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getOrderStatusColor(order.status)}`}>
-                      {order.status.replace('_', ' ').toUpperCase()}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getOrderStatusColor(order.status)}`}>
+                        {order.status.replace('_', ' ').toUpperCase()}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteOrder(order.id)}
+                        className="text-red-600 hover:text-red-900 p-1"
+                        title="Delete Order"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
                 
