@@ -812,10 +812,13 @@ async def delete_order(order_id: str, admin_user: User = Depends(get_admin_user)
     
     return {"message": "Order deleted successfully"}
 
+class BulkDeleteRequest(BaseModel):
+    order_ids: List[str]
+
 @api_router.delete("/admin/orders/bulk")
-async def delete_orders_bulk(order_ids: List[str], admin_user: User = Depends(get_admin_user)):
+async def delete_orders_bulk(request: BulkDeleteRequest, admin_user: User = Depends(get_admin_user)):
     """Delete multiple orders by IDs"""
-    result = await db.orders.delete_many({"id": {"$in": order_ids}})
+    result = await db.orders.delete_many({"id": {"$in": request.order_ids}})
     
     return {
         "message": f"{result.deleted_count} orders deleted successfully",
