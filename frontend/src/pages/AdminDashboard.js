@@ -303,7 +303,7 @@ const AdminDashboard = () => {
     if (window.confirm(`Are you sure you want to delete ${selectedOrders.length} selected orders? This action cannot be undone.`)) {
       try {
         await axios.delete(`${API}/admin/orders/bulk`, {
-          data: selectedOrders
+          data: { order_ids: selectedOrders }
         });
         toast.success(`${selectedOrders.length} orders deleted successfully!`);
         fetchOrders();
