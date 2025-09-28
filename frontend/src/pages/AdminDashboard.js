@@ -1031,13 +1031,18 @@ const AdminDashboard = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Store Phone</label>
                     <input
                       type="tel"
-                      defaultValue="+91 9876543210"
+                      value={settings.store_phone}
+                      onChange={(e) => handleSettingsChange('store_phone', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
-                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select 
+                      value={settings.currency}
+                      onChange={(e) => handleSettingsChange('currency', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
                       <option value="INR">Indian Rupee (₹)</option>
                       <option value="USD">US Dollar ($)</option>
                     </select>
