@@ -393,6 +393,101 @@ class ManiraAPITester:
         initial_order_count = len(orders_response)
         print(f"  📊 Found {initial_order_count} orders initially")
         
+        # If no orders exist, create some test orders first
+        if initial_order_count == 0:
+            print("  🔧 Creating test orders for deletion testing...")
+            
+            # First create a test user
+            test_user_data = {
+                "full_name": "Test User for Orders",
+                "email": f"order_test_{datetime.now().strftime('%H%M%S')}@test.com",
+                "phone": "9876543210",
+                "address": "123 Test Address",
+                "password": "testpass123"
+            }
+            
+            success, reg_response = self.run_test(
+                "Create Test User for Orders",
+                "POST",
+                "auth/register",
+                200,
+                data=test_user_data
+            )
+            
+            if not success:
+                self.log_test("Orders Delete Test", False, "Could not create test user for orders")
+                return False
+            
+            user_token = reg_response['access_token']
+            user_headers = {'Authorization': f'Bearer {user_token}', 'Content-Type': 'application/json'}
+            
+            # Create some test products first
+            test_product_data = {
+                "name": "Test Product for Order Deletion",
+                "description": "Test product for order deletion testing",
+                "price": 999.99,
+                "category": "rings",
+                "material": "Test Material",
+                "image_url": "https://example.com/test.jpg",
+                "inventory_count": 10
+            }
+            
+            success, product_response = self.run_test(
+                "Create Test Product for Orders",
+                "POST",
+                "admin/products",
+                200,
+                data=test_product_data,
+                headers=headers
+            )
+            
+            if not success:
+                self.log_test("Orders Delete Test", False, "Could not create test product")
+                return False
+            
+            product_id = product_response['id']
+            
+            # Create test orders
+            for i in range(3):
+                order_data = {
+                    "items": [
+                        {
+                            "product_id": product_id,
+                            "quantity": 1,
+                            "price": 999.99
+                        }
+                    ],
+                    "shipping_address": f"Test Address {i+1}",
+                    "phone": "9876543210"
+                }
+                
+                success, _ = self.run_test(
+                    f"Create Test Order {i+1}",
+                    "POST",
+                    "orders",
+                    200,
+                    data=order_data,
+                    headers=user_headers
+                )
+                
+                if not success:
+                    print(f"  ⚠️ Failed to create test order {i+1}")
+            
+            # Get orders again after creation
+            success, orders_response = self.run_test(
+                "Get Orders After Creation",
+                "GET",
+                "admin/orders",
+                200,
+                headers=headers
+            )
+            
+            if not success:
+                return False
+            
+            initial_order_count = len(orders_response)
+            print(f"  📊 Created {initial_order_count} test orders")
+        
         if initial_order_count == 0:
             self.log_test("Orders Delete Test", False, "No orders available to test deletion")
             return False
