@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Fix Settings persistence issue where backend has hardcoded values and Add delete functionality for test Orders and Customer profiles with individual and bulk options"
+user_problem_statement: "1. Fix Settings persistence issue where backend has hardcoded values and Add delete functionality for test Orders and Customer profiles with individual and bulk options. 2. Add admin option to update the Category home page (Homepage customization)"
 
 backend:
   - task: "Fix Settings API endpoint persistence"
