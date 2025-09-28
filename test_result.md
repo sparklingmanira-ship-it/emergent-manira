@@ -152,8 +152,8 @@ backend:
 
 frontend:
   - task: "Fix Settings tab to fetch and display backend settings"
-    implemented: false
-    working: false
+    implemented: true
+    working: true
     file: "/app/frontend/src/pages/AdminDashboard.js"
     stuck_count: 0
     priority: "high"
@@ -162,9 +162,12 @@ frontend:
         - working: false
           agent: "main"
           comment: "Frontend has hardcoded settings values, missing fetchSettings function and useEffect integration"
+        - working: true
+          agent: "main"
+          comment: "Added fetchSettings function and integrated into useEffect for settings tab. Settings now load from backend properly"
 
   - task: "Add delete buttons for orders with individual and bulk options"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "/app/frontend/src/pages/AdminDashboard.js"
     stuck_count: 0
@@ -174,9 +177,12 @@ frontend:
         - working: "NA"
           agent: "main"
           comment: "Need to add delete UI for orders in admin dashboard"
+        - working: "NA"
+          agent: "main"
+          comment: "Added individual delete buttons, bulk delete toggle, checkboxes, and bulk operations UI for orders"
 
   - task: "Add delete buttons for customers with option selection"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "/app/frontend/src/pages/AdminDashboard.js"
     stuck_count: 0
@@ -186,6 +192,9 @@ frontend:
         - working: "NA"
           agent: "main"
           comment: "Need to add delete UI for customers with choice of delete customer only or with orders"
+        - working: "NA"
+          agent: "main"
+          comment: "Added Actions column to customers table with two delete buttons - customer only and customer+orders"
 
 metadata:
   created_by: "main_agent"
